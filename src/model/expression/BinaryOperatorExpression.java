@@ -7,6 +7,8 @@ import model.value.BooleanValue;
 import model.value.IntegerValue;
 import model.value.Value;
 
+
+// TODO Implement ArithmeticExpression class
 public record BinaryOperatorExpression
         (String operator, Expression left, Expression right)
         implements Expression {
