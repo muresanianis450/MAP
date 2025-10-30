@@ -1,7 +1,7 @@
 package model.expression;
 import model.value.Value;
 import model.state.SymbolTable;
-import model.exceptions.MyException;
+import exceptions.MyException;
 
 public record VariableExpression(String variableName) implements Expression {
 
