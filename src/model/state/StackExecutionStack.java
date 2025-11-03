@@ -22,4 +22,14 @@ public class StackExecutionStack implements ExecutionStack {
     public Statement pop(){
         return stack.removeFirst();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            sb.append(stack.get(i));
+            if (i > 0) sb.append(" | ");
+        }
+        return sb.toString();
+    }
 }

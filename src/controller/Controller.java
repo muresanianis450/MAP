@@ -25,11 +25,14 @@ public class Controller {
         ProgramState program = repository.getCurrentProgram();
         try {
             while (!program.executionStack().isEmpty()) {
+                System.out.println(program);
                 executeOneStep(program);
             }
+            System.out.println(program);
         } catch (MyException e) {
             System.out.println(e.getMessage());
         }
+
     }
 }
 

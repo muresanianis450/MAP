@@ -10,4 +10,12 @@ in use and the output resulted so far.
 * all of this by myself
 * */
 public record ProgramState
-        (ExecutionStack executionStack, SymbolTable symbolTable, Out out){}
+        (ExecutionStack executionStack, SymbolTable symbolTable, Out out){
+
+    @Override
+    public String toString() {
+        return "ExeStack={" + executionStack + "}\n" +
+                "SymbolTable=" + symbolTable + "\n" +
+                "Output=" + out + "\n";
+    }
+}
