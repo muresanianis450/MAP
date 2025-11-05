@@ -3,7 +3,7 @@ package model.state;
 import model.ADT.List.IList;
 import model.ADT.Stack.IStack;
 import model.ADT.Map.IMap;
-
+import model.statement.Statement;
 /*Program state refers to the current state the program is in,
 The commands that need to be executed, the variables that are yet
 in use and the output resulted so far.
@@ -14,7 +14,7 @@ in use and the output resulted so far.
 * all of this by myself
 * */
 public record ProgramState
-        (IStack executionStack, IMap symbolTable, IList out){
+        (IStack<Statement> executionStack, IMap symbolTable, IList out){
 
     @Override
     public String toString() {

@@ -5,13 +5,13 @@ import model.statement.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StackExecutionStack implements IStack {
+public class StackExecutionStack<T> implements IStack<T>  {
 
-    private final List<Statement> stack = new LinkedList<>();
+    private final List<T> stack = new LinkedList<>();
 
     @Override
-    public void push(Statement statement){
-        stack.addFirst(statement);
+    public void push(T  item){
+        stack.addFirst(item);
     }
 
     @Override
@@ -19,7 +19,7 @@ public class StackExecutionStack implements IStack {
         return stack.isEmpty();
     }
     @Override
-    public Statement pop(){
+    public T pop(){
         return stack.removeFirst();
     }
 
