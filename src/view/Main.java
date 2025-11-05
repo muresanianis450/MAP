@@ -6,7 +6,7 @@ import model.ADT.List.ListOut;
 import model.ADT.Map.SymbolTable;
 import model.ADT.Stack.StackExecutionStack;
 import model.expression.*;
-import model.state.*;
+import model.state.ProgramState;
 import model.statement.*;
 import model.type.Type;
 import model.value.BooleanValue;
@@ -19,11 +19,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Ask the user if they want to see each program state
-        System.out.print("Do you want to display the Program State? [y/n]: ");
-        boolean displayState = scanner.nextLine().trim().equalsIgnoreCase("y");
-
-        // --- Example 1 ---
+        // --- Example programs ---
         Statement ex1 = new CompoundStatement(
                 new VariableDeclarationStatement("v", Type.INTEGER),
                 new CompoundStatement(
@@ -32,7 +28,6 @@ public class Main {
                 )
         );
 
-        // --- Example 2 ---
         Statement ex2 = new CompoundStatement(
                 new VariableDeclarationStatement("a", Type.INTEGER),
                 new CompoundStatement(
@@ -58,7 +53,6 @@ public class Main {
                 )
         );
 
-        // --- Example 3 ---
         Statement ex3 = new CompoundStatement(
                 new VariableDeclarationStatement("a", Type.BOOLEAN),
                 new CompoundStatement(
@@ -77,23 +71,35 @@ public class Main {
                 )
         );
 
-        // --- Interactive loop ---
+        // --- Read log file path ---
+        System.out.print("Enter log file path: ");
+        String logFilePath = scanner.nextLine().trim();
+
+        // --- Main loop ---
         while (true) {
-            System.out.println("\nEnter the number of the exercise you want to run:");
-            System.out.println("1) int v; v = 2; print(v)");
-            System.out.println("2) int a; int b; a = 2 + 3 * 5; b = a + 1; print(b)");
-            System.out.println("3) bool a; int v; a = true; (if a then v = 2 else v = 3); print(v)");
+            System.out.println("\n==============================");
+            System.out.println("Select mode:");
+            System.out.println("1) Interactive execution (Assignment 2)");
+            System.out.println("2) Full execution with log (Assignment 3)");
             System.out.println("0) Exit");
+            System.out.println("==============================");
             System.out.print("> ");
 
-            String option = scanner.nextLine().trim();
+            String mainOption = scanner.nextLine().trim();
 
-            if (option.equals("0")) {
+            if (mainOption.equals("0")) {
                 System.out.println("Exiting...");
                 break;
             }
 
-            Statement program = switch (option) {
+            System.out.println("\nSelect program to run:");
+            System.out.println("1) int v; v = 2; print(v)");
+            System.out.println("2) int a; int b; a = 2 + 3 * 5; b = a + 1; print(b)");
+            System.out.println("3) bool a; int v; a = true; (if a then v = 2 else v = 3); print(v)");
+            System.out.print("> ");
+            String programOption = scanner.nextLine().trim();
+
+            Statement program = switch (programOption) {
                 case "1" -> ex1;
                 case "2" -> ex2;
                 case "3" -> ex3;
@@ -105,36 +111,54 @@ public class Main {
                 continue;
             }
 
+            // Prepare shared components
             var stack = new StackExecutionStack();
             stack.push(program);
             var symbols = new SymbolTable();
             var out = new ListOut();
-
             var programState = new ProgramState(stack, symbols, out);
-            var repository = new Repository();
+
+            var repository = new Repository(logFilePath);
             repository.addProgram(programState);
             var controller = new Controller(repository);
 
-            System.out.println("\nRunning program " + option + "...\n");
+            if (mainOption.equals("1")) {
+                // --- Interactive execution ---
+                System.out.print("Do you want to display the Program State at each step? [y/n]: ");
+                boolean displayState = scanner.nextLine().trim().equalsIgnoreCase("y");
 
-            try {
-                while (!programState.executionStack().isEmpty()) {
-                    if (displayState) {
-                        System.out.println("ExeStack=" + programState.executionStack());
-                        System.out.println("SymbolTable=" + programState.symbolTable());
-                        System.out.println("Output=" + programState.out());
-                        System.out.println();
+                System.out.println("\nRunning program " + programOption + " (Assignment 2)...\n");
+
+                try {
+                    repository.logPrgStateExec(); // log initial state
+
+                    while (!programState.executionStack().isEmpty()) {
+                        controller.executeOneStep(programState);
+                        repository.logPrgStateExec();
+
+                        if (displayState) {
+                            System.out.println("ExeStack=" + programState.executionStack());
+                            System.out.println("SymbolTable=" + programState.symbolTable());
+                            System.out.println("Output=" + programState.out());
+                            System.out.println();
+                        }
                     }
-                    controller.executeOneStep(programState);
+
+                    System.out.println("Final Output: " + programState.out() + "\n");
+
+                } catch (MyException e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
 
-                System.out.println("ExeStack=" + programState.executionStack());
-                System.out.println("SymbolTable=" + programState.symbolTable());
-                System.out.println("Output=" + programState.out());
-                System.out.println("\nFinal Output: " + programState.out() + "\n");
+            } else if (mainOption.equals("2")) {
+                // --- Full execution with logging ---
+                System.out.println("\nRunning program " + programOption + " (Assignment 3)...\n");
 
-            } catch (MyException e) {
-                System.out.println("Error: " + e.getMessage());
+                controller.executeAllSteps(); // will log after each step
+                System.out.println("Execution finished. Check the log file at: " + logFilePath);
+
+            } else {
+                System.out.println("Invalid option. Try again.");
             }
         }
     }

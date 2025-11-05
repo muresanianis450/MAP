@@ -1,15 +1,15 @@
 package controller;
 import model.state.ProgramState;
 import model.statement.Statement;
-import repository.Repository;
+import repository.IRepository;
 import exceptions.MyException;
 
 
 public class Controller {
 
-    private final Repository repository;
+    private final IRepository repository;
 
-    public Controller(Repository repository) {
+    public Controller(IRepository repository) {
         this.repository = repository;
     }
 
@@ -24,9 +24,10 @@ public class Controller {
     public void executeAllSteps() {
         ProgramState program = repository.getCurrentProgram();
         try {
+            repository.logPrgStateExec(); // log initial state
             while (!program.executionStack().isEmpty()) {
-                System.out.println(program);
                 executeOneStep(program);
+                repository.logPrgStateExec(); // log after each step
             }
             System.out.println(program);
         } catch (MyException e) {
