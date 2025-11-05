@@ -1,5 +1,5 @@
 package model.ADT.List;
 
-public interface IList {
-    void add(Object value);
+public interface IList<T> {
+    void add(T value);
 }
