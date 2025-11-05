@@ -3,7 +3,7 @@ package view;
 import controller.Controller;
 import exceptions.MyException;
 import model.ADT.List.ListOut;
-import model.ADT.Map.MapSymbolTable;
+import model.ADT.Map.SymbolTable;
 import model.ADT.Stack.StackExecutionStack;
 import model.expression.*;
 import model.state.*;
@@ -107,7 +107,7 @@ public class Main {
 
             var stack = new StackExecutionStack();
             stack.push(program);
-            var symbols = new MapSymbolTable();
+            var symbols = new SymbolTable();
             var out = new ListOut();
 
             var programState = new ProgramState(stack, symbols, out);

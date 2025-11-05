@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class MapSymbolTable implements IMap {
+public class SymbolTable<K,V> implements IMap<K,V> {
 
     private final Map<String, Value> map = new HashMap<>();
 

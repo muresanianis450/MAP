@@ -3,7 +3,7 @@ package model.ADT.Map;
 import model.type.Type;
 import model.value.Value;
 
-public interface IMap {
+public interface IMap<K,V> {
 
     boolean isDefined(String variableName);
 
