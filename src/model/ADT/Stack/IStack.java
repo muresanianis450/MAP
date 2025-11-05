@@ -1,6 +1,8 @@
-package model.state;
+package model.ADT.Stack;
 import model.statement.Statement;
-public interface ExecutionStack {
+
+// TODO Make generic ADT
+public interface IStack {
     void push(Statement statement);
 
     Statement pop();

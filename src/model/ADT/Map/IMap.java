@@ -1,9 +1,9 @@
-package model.state;
+package model.ADT.Map;
 
 import model.type.Type;
 import model.value.Value;
 
-public interface SymbolTable {
+public interface IMap {
 
     boolean isDefined(String variableName);
 

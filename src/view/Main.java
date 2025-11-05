@@ -2,6 +2,9 @@ package view;
 
 import controller.Controller;
 import exceptions.MyException;
+import model.ADT.List.ListOut;
+import model.ADT.Map.MapSymbolTable;
+import model.ADT.Stack.StackExecutionStack;
 import model.expression.*;
 import model.state.*;
 import model.statement.*;

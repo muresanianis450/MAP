@@ -1,8 +1,8 @@
-package model.state;
+package model.ADT.List;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListOut implements Out{
+public class ListOut implements IList {
 
     private final List<Object> outputList;
 

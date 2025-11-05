@@ -1,4 +1,4 @@
-package model.state;
+package model.ADT.Map;
 import model.type.Type;
 import model.value.Value;
 
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class MapSymbolTable implements SymbolTable {
+public class MapSymbolTable implements IMap {
 
     private final Map<String, Value> map = new HashMap<>();
 

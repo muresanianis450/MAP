@@ -1,7 +1,7 @@
 package model.expression;
 
 import exceptions.MyException;
-import model.state.SymbolTable;
+import model.ADT.Map.IMap;
 import model.type.Type;
 import model.value.BooleanValue;
 import model.value.IntegerValue;
@@ -11,7 +11,7 @@ public record BinaryExpression(String operator, Expression left, Expression righ
         implements Expression {
 
     @Override
-    public Value evaluate(SymbolTable symbolTable) throws MyException {
+    public Value evaluate(IMap symbolTable) throws MyException {
         Value leftTerm = left.evaluate(symbolTable);
         Value rightTerm = right.evaluate(symbolTable);
 

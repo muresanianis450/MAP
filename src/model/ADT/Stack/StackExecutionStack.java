@@ -1,11 +1,11 @@
-package model.state;
+package model.ADT.Stack;
 
 import model.statement.Statement;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class StackExecutionStack implements ExecutionStack {
+public class StackExecutionStack implements IStack {
 
     private final List<Statement> stack = new LinkedList<>();
 
