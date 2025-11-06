@@ -24,7 +24,7 @@ public class SymbolTable<K,V> implements IMap<K,V> {
     default value to be.
     */
     public void declareVariable(String variableName, Type type){
-        map.put(variableName,type.getDefaultValue());
+        map.put(variableName,type.defaultValue());
 
     }
 

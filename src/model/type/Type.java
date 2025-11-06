@@ -7,13 +7,28 @@ import model.value.StringValue;
 import model.value.StringValue;
 public enum Type {
 
-    INTEGER,
+    INTEGER{
+        @Override
+        public Value defaultValue(){
+            return new IntegerValue(0);
+        }
+    },
 
-    BOOLEAN,
+    BOOLEAN{
+        @Override
+        public Value defaultValue(){
+            return new BooleanValue(false);
+        }
+    },
 
-    STRING;
+    STRING{
+        @Override
+        public Value defaultValue(){
+            return new StringValue("");
+        }
+    };
 
-    public Value getDefaultValue(){
+   /* public Value getDefaultValue(){
         switch(this){
             case INTEGER:
                 return new IntegerValue(0);
@@ -25,5 +40,6 @@ public enum Type {
                 throw new IllegalArgumentException("Unhandled type: "+ this);
 
         }
-    }
+    }*/
+    public abstract Value defaultValue();
 }
