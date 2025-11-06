@@ -42,7 +42,7 @@ public class Repository implements IRepository {
             logFile.println(state.out());
 
             logFile.println("FileTable:");
-            logFile.println("(not implemented yet)");
+            logFile.println(state.fileTable());
 
             logFile.println("------------------------------------------------------------\n");
 

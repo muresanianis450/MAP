@@ -29,4 +29,8 @@ public class StringValue implements Value {
             return false;
         return value.equals(other.value);
     }
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
 }

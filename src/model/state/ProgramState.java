@@ -1,5 +1,6 @@
 package model.state;
 
+import model.ADT.FileTable.IFileTable;
 import model.ADT.List.IList;
 import model.ADT.Stack.IStack;
 import model.ADT.Map.IMap;
@@ -17,8 +18,10 @@ in use and the output resulted so far.
 public record ProgramState
         (IStack<Statement> executionStack,
          IMap<String, Value> symbolTable,
-         IList<Value> out)
-{
+         IList<Value> out,
+        IFileTable fileTable
+) {
+
 
     @Override
     public String toString() {
