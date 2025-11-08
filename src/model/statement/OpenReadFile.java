@@ -21,7 +21,7 @@ public class OpenReadFile implements Statement {
     @Override
     public ProgramState execute(ProgramState state) throws MyException {
         Value value = expression.evaluate(state.symbolTable());
-        if (!(value instanceof StringValue stringValue)) {
+        if (!(value.getType() instanceof StringValue stringValue)) {
             throw new MyException("Expression must evaluate to a string value!");
         }
 
