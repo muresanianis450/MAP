@@ -23,8 +23,8 @@ public class SymbolTable<K,V> implements IMap<K,V> {
      we call the default value for out type, so it could be 0, NULL or however we define the
     default value to be.
     */
-    public void declareVariable(String variableName, Type type){
-        map.put(variableName,type.defaultValue());
+    public void declareVariable(String variableName, Value value){
+        map.put(variableName,value);
 
     }
 

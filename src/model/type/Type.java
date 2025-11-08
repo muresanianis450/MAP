@@ -1,4 +1,13 @@
 package model.type;
+
+import model.value.Value;
+public interface Type {
+    Value defaultValue();
+    String toString();
+}
+
+// Type before changes to add subclasses for Type
+/*package model.type;
 import model.value.Value;
 import model.value.IntegerValue;
 import model.value.BooleanValue;
@@ -40,6 +49,8 @@ public enum Type {
                 throw new IllegalArgumentException("Unhandled type: "+ this);
 
         }
-    }*/
-    public abstract Value defaultValue();
+    }public abstract Value defaultValue();
 }
+
+_____________--_____________--_____________--_____________--_____________--
+* */

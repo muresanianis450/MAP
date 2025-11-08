@@ -1,4 +1,5 @@
 package model.value;
+import model.type.BooleanType;
 import model.type.Type;
 public class BooleanValue implements Value {
     private final boolean value;
@@ -13,7 +14,7 @@ public class BooleanValue implements Value {
 
     @Override
     public Type getType(){
-        return Type.BOOLEAN;
+        return new BooleanType();
     }
     @Override
     public String toString(){

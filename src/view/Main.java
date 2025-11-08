@@ -9,6 +9,8 @@ import model.ADT.Stack.StackExecutionStack;
 import model.expression.*;
 import model.state.ProgramState;
 import model.statement.*;
+import model.type.BooleanType;
+import model.type.IntegerType;
 import model.type.Type;
 import model.value.BooleanValue;
 import model.value.IntegerValue;
@@ -23,7 +25,7 @@ public class Main {
 
         // --- Example programs ---
         Statement ex1 = new CompoundStatement(
-                new VariableDeclarationStatement("v", Type.INTEGER),
+                new VariableDeclarationStatement("v", new IntegerType()),
                 new CompoundStatement(
                         new AssignmentStatement("v", new ConstantExpression(new IntegerValue(2))),
                         new PrintStatement(new VariableExpression("v"))
@@ -31,9 +33,9 @@ public class Main {
         );
 
         Statement ex2 = new CompoundStatement(
-                new VariableDeclarationStatement("a", Type.INTEGER),
+                new VariableDeclarationStatement("a", new IntegerType()),
                 new CompoundStatement(
-                        new VariableDeclarationStatement("b", Type.INTEGER),
+                        new VariableDeclarationStatement("b", new IntegerType()),
                         new CompoundStatement(
                                 new AssignmentStatement("a",
                                         new BinaryExpression("+",
@@ -56,9 +58,9 @@ public class Main {
         );
 
         Statement ex3 = new CompoundStatement(
-                new VariableDeclarationStatement("a", Type.BOOLEAN),
+                new VariableDeclarationStatement("a", new BooleanType()),
                 new CompoundStatement(
-                        new VariableDeclarationStatement("v", Type.INTEGER),
+                        new VariableDeclarationStatement("v", new BooleanType()),
                         new CompoundStatement(
                                 new AssignmentStatement("a", new ConstantExpression(new BooleanValue(true))),
                                 new CompoundStatement(
@@ -75,7 +77,7 @@ public class Main {
         // int x; openReadFile("numbers.txt"); readFile("numbers.txt", x); print(x);
 
         Statement fileProgramAll = new CompoundStatement(
-                new VariableDeclarationStatement("x", Type.INTEGER),
+                new VariableDeclarationStatement("x", new IntegerType()),
                 new CompoundStatement(
                         new OpenReadFile(new ConstantExpression(new StringValue("src/numbers.txt"))),
                         new ReadAllFileAutomatically("src/numbers.txt", "x")

@@ -2,6 +2,8 @@ package model.expression;
 
 import exceptions.MyException;
 import model.ADT.Map.IMap;
+import model.type.BooleanType;
+import model.type.IntegerType;
 import model.type.Type;
 import model.value.BooleanValue;
 import model.value.IntegerValue;
@@ -30,7 +32,8 @@ public record BinaryExpression(String operator, Expression left, Expression righ
     }
 
     private BooleanValue evaluateLogical(Value leftTerm, Value rightTerm) throws MyException {
-        if (leftTerm.getType() != Type.BOOLEAN || rightTerm.getType() != Type.BOOLEAN)
+        if( (leftTerm.getType() instanceof BooleanType)
+                || ( rightTerm.getType() instanceof BooleanType)) // before it was != Type.BOOLEAN but now Type is no longer enum
             throw new MyException("Logical operators require boolean operands");
 
         boolean leftVal = ((BooleanValue) leftTerm).getValue();
@@ -44,7 +47,8 @@ public record BinaryExpression(String operator, Expression left, Expression righ
     }
 
     private BooleanValue evaluateComparison(Value leftTerm, Value rightTerm) throws MyException {
-        if (leftTerm.getType() != Type.INTEGER || rightTerm.getType() != Type.INTEGER)
+        if ((leftTerm.getType() instanceof IntegerType)
+                || (rightTerm.getType() instanceof IntegerType))
             throw new MyException("Comparison operators require integer operands");
 
         int leftVal = ((IntegerValue) leftTerm).getValue();
@@ -65,13 +69,13 @@ public record BinaryExpression(String operator, Expression left, Expression righ
 
         boolean result = switch (operator) {
             case "==" -> {
-                if (leftTerm.getType() == Type.INTEGER)
+                if (leftTerm.getType() instanceof IntegerType)
                     yield ((IntegerValue) leftTerm).getValue() == ((IntegerValue) rightTerm).getValue();
                 else
                     yield ((BooleanValue) leftTerm).getValue() == ((BooleanValue) rightTerm).getValue();
             }
             case "!=" -> {
-                if (leftTerm.getType() == Type.INTEGER)
+                if (leftTerm.getType() instanceof IntegerType)
                     yield ((IntegerValue) leftTerm).getValue() != ((IntegerValue) rightTerm).getValue();
                 else
                     yield ((BooleanValue) leftTerm).getValue() != ((BooleanValue) rightTerm).getValue();

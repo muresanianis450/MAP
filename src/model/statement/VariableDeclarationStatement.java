@@ -17,7 +17,8 @@ public class VariableDeclarationStatement implements Statement{
         if(state.symbolTable().isDefined(variableName)){
             throw new RuntimeException("Variable already declared: " + variableName);
         }
-        state.symbolTable().declareVariable(variableName, type);
+        //state.symbolTable().declareVariable(variableName, type); BEFORE THE CHANGE
+        state.symbolTable().declareVariable(variableName, type.defaultValue());
         return state;
     }
 

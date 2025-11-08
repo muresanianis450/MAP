@@ -1,4 +1,5 @@
 package model.value;
+import model.type.IntegerType;
 import model.type.Type;
 public class IntegerValue implements Value{
     private final int value;
@@ -14,7 +15,7 @@ public class IntegerValue implements Value{
 
     @Override
     public Type getType() {
-        return Type.INTEGER;}
+        return new IntegerType();}
 
     @Override
     public String toString() {

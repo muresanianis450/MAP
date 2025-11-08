@@ -9,7 +9,7 @@ public interface IMap<K,V> {
 
     Type getType(String variableName);
 
-    void declareVariable(String variableName, Type type);
+    void declareVariable(String variableName, Value value);
 
     void update(String variableName, Value value);
 

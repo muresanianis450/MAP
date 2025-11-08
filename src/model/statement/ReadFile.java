@@ -5,6 +5,7 @@ import model.ADT.FileTable.IFileTable;
 import model.ADT.Map.IMap;
 import model.expression.Expression;
 import model.state.ProgramState;
+import model.type.IntegerType;
 import model.value.IntegerValue;
 import model.value.StringValue;
 import model.value.Value;
@@ -39,7 +40,7 @@ public class ReadFile implements Statement {
             throw new MyException("Variable " + variableName + " is not defined!");
         }
 
-        if (!symTable.getValue(variableName).getType().equals(Type.INTEGER)) {
+        if (!(symTable.getValue(variableName).getType() instanceof IntegerType)) {
             throw new MyException("Variable " + variableName + " must be of type int!");
         }
 
