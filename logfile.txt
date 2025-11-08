@@ -1,0 +1,209 @@
+------------------------------------------------------------
+ExeStack:
+(string varf; (varf= ConstantExpression[value="src/test.in"]; (OpenReadFile(VariableExpression[variableName=varf]); (int varc; (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])))))))))
+SymTable:
+{}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(varf= ConstantExpression[value="src/test.in"]; (OpenReadFile(VariableExpression[variableName=varf]); (int varc; (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])))))))) | string varf
+SymTable:
+{}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(varf= ConstantExpression[value="src/test.in"]; (OpenReadFile(VariableExpression[variableName=varf]); (int varc; (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf]))))))))
+SymTable:
+{varf=""}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(OpenReadFile(VariableExpression[variableName=varf]); (int varc; (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf]))))))) | varf= ConstantExpression[value="src/test.in"]
+SymTable:
+{varf=""}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(OpenReadFile(VariableExpression[variableName=varf]); (int varc; (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])))))))
+SymTable:
+{varf="src/test.in"}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(int varc; (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])))))) | OpenReadFile(VariableExpression[variableName=varf])
+SymTable:
+{varf="src/test.in"}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(int varc; (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf]))))))
+SymTable:
+{varf="src/test.in"}
+Out:
+[]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf]))))) | int varc
+SymTable:
+{varf="src/test.in"}
+Out:
+[]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])))))
+SymTable:
+{varf="src/test.in", varc=0}
+Out:
+[]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])))) | ReadFile(VariableExpression[variableName=varf], varc)
+SymTable:
+{varf="src/test.in", varc=0}
+Out:
+[]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(print(VariableExpression[variableName=varc]); (ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf]))))
+SymTable:
+{varf="src/test.in", varc=12344}
+Out:
+[]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf]))) | print(VariableExpression[variableName=varc])
+SymTable:
+{varf="src/test.in", varc=12344}
+Out:
+[]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(ReadFile(VariableExpression[variableName=varf], varc); (print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])))
+SymTable:
+{varf="src/test.in", varc=12344}
+Out:
+[12344]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf])) | ReadFile(VariableExpression[variableName=varf], varc)
+SymTable:
+{varf="src/test.in", varc=12344}
+Out:
+[12344]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(print(VariableExpression[variableName=varc]); CloseReadFile(VariableExpression[variableName=varf]))
+SymTable:
+{varf="src/test.in", varc=0}
+Out:
+[12344]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+CloseReadFile(VariableExpression[variableName=varf]) | print(VariableExpression[variableName=varc])
+SymTable:
+{varf="src/test.in", varc=0}
+Out:
+[12344]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+CloseReadFile(VariableExpression[variableName=varf])
+SymTable:
+{varf="src/test.in", varc=0}
+Out:
+[12344, 0]
+FileTable:
+"src/test.in"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+
+SymTable:
+{varf="src/test.in", varc=0}
+Out:
+[12344, 0]
+FileTable:
+
+------------------------------------------------------------
+

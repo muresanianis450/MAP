@@ -51,7 +51,7 @@ public class ReadFile implements Statement {
             String line = reader.readLine();
             int number = (line == null || line.trim().isEmpty()) ? 0 : Integer.parseInt(line.trim());
             symTable.update(variableName, new IntegerValue(number));
-         state.out().add(new IntegerValue(number));
+            //state.out().add(new IntegerValue(number));
         } catch (IOException e) {
             throw new MyException("Error reading from file: " + e.getMessage());
         } catch (NumberFormatException e) {

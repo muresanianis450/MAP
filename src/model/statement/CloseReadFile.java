@@ -8,40 +8,45 @@ import model.value.StringValue;
 import model.value.Value;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 
-public class OpenReadFile implements Statement {
+public class CloseReadFile implements Statement {
     private final Expression expression;
 
-    public OpenReadFile(Expression expression) {
+    public CloseReadFile(Expression expression) {
         this.expression = expression;
     }
 
     @Override
     public ProgramState execute(ProgramState state) throws MyException {
+        // Evaluate the expression
         Value value = expression.evaluate(state.symbolTable());
         if (!(value instanceof StringValue stringValue)) {
             throw new MyException("Expression must evaluate to a string value!");
         }
 
         IFileTable fileTable = state.fileTable();
-        if (fileTable.isDefined(stringValue)) {
-            throw new MyException("File is already opened: " + stringValue);
+
+        // Check if file is in FileTable
+        if (!fileTable.isDefined(stringValue)) {
+            throw new MyException("File is not opened: " + stringValue);
         }
 
+        BufferedReader reader = fileTable.lookup(stringValue);
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(stringValue.getValue()));
-            fileTable.add(stringValue, reader);
+            reader.close();
         } catch (IOException e) {
-            throw new MyException("Error opening file: " + e.getMessage());
+            throw new MyException("Error closing file: " + e.getMessage());
         }
+
+        // Remove entry from FileTable
+        fileTable.remove(stringValue);
 
         return state;
     }
 
     @Override
     public String toString() {
-        return "OpenReadFile(" + expression + ")";
+        return "CloseReadFile(" + expression + ")";
     }
 }

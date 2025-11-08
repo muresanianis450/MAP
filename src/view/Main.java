@@ -92,6 +92,31 @@ public class Main {
                 )
         );
 
+        Statement fileProgramAllExample = new CompoundStatement(
+                new VariableDeclarationStatement("varf", new StringType()),
+                new CompoundStatement(
+                        new AssignmentStatement("varf", new ConstantExpression(new StringValue("src/test.in"))),
+                        new CompoundStatement(
+                                new OpenReadFile(new VariableExpression("varf")),
+                                new CompoundStatement(
+                                        new VariableDeclarationStatement("varc", new IntegerType()),
+                                        new CompoundStatement(
+                                                new ReadFile(new VariableExpression("varf"), "varc"),
+                                                new CompoundStatement(
+                                                        new PrintStatement(new VariableExpression("varc")),
+                                                        new CompoundStatement(
+                                                                new ReadFile(new VariableExpression("varf"), "varc"),
+                                                                new CompoundStatement(
+                                                                        new PrintStatement(new VariableExpression("varc")),
+                                                                        new CloseReadFile(new VariableExpression("varf"))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
         // --- Read log file path ---
         System.out.print("Enter log file path: ");
         String logFilePath = scanner.nextLine().trim();
@@ -119,6 +144,8 @@ public class Main {
             System.out.println("3) bool a; int v; a = true; (if a then v = 2 else v = 3); print(v)");
             System.out.println("4) int x; openReadFile(\"src/numbers.txt\"); readFile(\"src/numbers.txt\", x); print(x)");
             System.out.println("5) string s; s = \"Hello, World!\"; print(s)");
+            System.out.println("6) string varf; varf=\"test.in\"; openRFile(varf); int varc; readFile(varf,varc); print(varc); readFile(varf,varc); print(varc); closeRFile(varf)");
+
             System.out.print("> ");
             String programOption = scanner.nextLine().trim();
 
@@ -128,6 +155,7 @@ public class Main {
                 case "3" -> ex3;
                 case "4" -> fileProgramAll; // <-- new option for file operations
                 case "5" -> stringTest;
+                case "6" -> fileProgramAllExample; // <-- new example
                 default -> null;
             };
 
@@ -160,7 +188,7 @@ public class Main {
 
                     while (!programState.executionStack().isEmpty()) {
                         controller.executeOneStep(programState);
-                        //repository.logPrgStateExec(); <- removing this so it prints only after each execution , not every step
+                        repository.logPrgStateExec();// <- removing this so it prints only after each execution , not every step
 
                         if (displayState) {
                             System.out.println("ExeStack=" + programState.executionStack());
