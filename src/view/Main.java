@@ -11,6 +11,7 @@ import model.state.ProgramState;
 import model.statement.*;
 import model.type.BooleanType;
 import model.type.IntegerType;
+import model.type.StringType;
 import model.type.Type;
 import model.value.BooleanValue;
 import model.value.IntegerValue;
@@ -74,6 +75,13 @@ public class Main {
                         )
                 )
         );
+        Statement stringTest = new CompoundStatement(
+                new VariableDeclarationStatement("s", new StringType()),
+                new CompoundStatement(
+                        new AssignmentStatement("s", new ConstantExpression(new StringValue("Hello, World!"))),
+                        new PrintStatement(new VariableExpression("s"))
+                )
+        );
         // int x; openReadFile("numbers.txt"); readFile("numbers.txt", x); print(x);
 
         Statement fileProgramAll = new CompoundStatement(
@@ -110,6 +118,7 @@ public class Main {
             System.out.println("2) int a; int b; a = 2 + 3 * 5; b = a + 1; print(b)");
             System.out.println("3) bool a; int v; a = true; (if a then v = 2 else v = 3); print(v)");
             System.out.println("4) int x; openReadFile(\"src/numbers.txt\"); readFile(\"src/numbers.txt\", x); print(x)");
+            System.out.println("5) string s; s = \"Hello, World!\"; print(s)");
             System.out.print("> ");
             String programOption = scanner.nextLine().trim();
 
@@ -118,6 +127,7 @@ public class Main {
                 case "2" -> ex2;
                 case "3" -> ex3;
                 case "4" -> fileProgramAll; // <-- new option for file operations
+                case "5" -> stringTest;
                 default -> null;
             };
 
@@ -150,7 +160,7 @@ public class Main {
 
                     while (!programState.executionStack().isEmpty()) {
                         controller.executeOneStep(programState);
-                        repository.logPrgStateExec();
+                        //repository.logPrgStateExec(); <- removing this so it prints only after each execution , not every step
 
                         if (displayState) {
                             System.out.println("ExeStack=" + programState.executionStack());

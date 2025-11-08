@@ -15,9 +15,8 @@ public class StringValue implements Value {
     }
 
     @Override
-
     public Type getType() {
-        return new StringType(); //Here's a problem
+        return new StringType();
     }
 
     @Override
@@ -26,11 +25,12 @@ public class StringValue implements Value {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof StringValue other))
-            return false;
+    public boolean equals(Object obj) { //changed here!
+        if (this == obj) return true;
+        if (!(obj instanceof StringValue other)) return false;
         return value.equals(other.value);
     }
+
     @Override
     public int hashCode() {
         return value.hashCode();
