@@ -1,0 +1,68 @@
+------------------------------------------------------------
+ExeStack:
+(int x; (OpenReadFile(ConstantExpression[value="src/numbers.txt"]); ReadAllFileAutomatically(src/numbers.txt, x)))
+SymTable:
+{}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(OpenReadFile(ConstantExpression[value="src/numbers.txt"]); ReadAllFileAutomatically(src/numbers.txt, x)) | int x
+SymTable:
+{}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(OpenReadFile(ConstantExpression[value="src/numbers.txt"]); ReadAllFileAutomatically(src/numbers.txt, x))
+SymTable:
+{x=0}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+ReadAllFileAutomatically(src/numbers.txt, x) | OpenReadFile(ConstantExpression[value="src/numbers.txt"])
+SymTable:
+{x=0}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+ReadAllFileAutomatically(src/numbers.txt, x)
+SymTable:
+{x=0}
+Out:
+[]
+FileTable:
+"src/numbers.txt"
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+
+SymTable:
+{x=5}
+Out:
+[1, 2, 3, 4, 5]
+FileTable:
+"src/numbers.txt"
+
+------------------------------------------------------------
+

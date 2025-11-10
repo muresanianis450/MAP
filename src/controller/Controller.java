@@ -40,8 +40,10 @@ public class Controller {
         } catch (MyException e) {
             System.out.println(e.getMessage());
         }
+    }
 
-
+    public IRepository getRepository() {
+        return repository;
     }
 }
 
