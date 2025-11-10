@@ -1,0 +1,66 @@
+------------------------------------------------------------
+ExeStack:
+(int x; (x= ConstantExpression[value=7]; print(VariableExpression[variableName=x] > ConstantExpression[value=5])))
+SymTable:
+{}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(x= ConstantExpression[value=7]; print(VariableExpression[variableName=x] > ConstantExpression[value=5])) | int x
+SymTable:
+{}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+(x= ConstantExpression[value=7]; print(VariableExpression[variableName=x] > ConstantExpression[value=5]))
+SymTable:
+{x=0}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+print(VariableExpression[variableName=x] > ConstantExpression[value=5]) | x= ConstantExpression[value=7]
+SymTable:
+{x=0}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+print(VariableExpression[variableName=x] > ConstantExpression[value=5])
+SymTable:
+{x=7}
+Out:
+[]
+FileTable:
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+ExeStack:
+
+SymTable:
+{x=7}
+Out:
+[true]
+FileTable:
+
+------------------------------------------------------------
+

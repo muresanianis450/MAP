@@ -22,7 +22,6 @@ public class Interpreter {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // --- Example program factories ---
         Map<String, Supplier<Statement>> examples = new HashMap<>();
         Map<String, String> descriptions = new HashMap<>();
 
@@ -99,6 +98,21 @@ public class Interpreter {
                 )
         ));
         descriptions.put("5", "string s; s = \"Hello, World!\"; print(s)");
+
+        // Example 6: Relational Expression
+        examples.put("6", () -> new CompoundStatement(
+                new VariableDeclarationStatement("x", new IntegerType()),
+                new CompoundStatement(
+                        new AssignmentStatement("x", new ConstantExpression(new IntegerValue(7))),
+                        new PrintStatement(new RelationalExpression(
+                                new VariableExpression("x"),
+                                new ConstantExpression(new IntegerValue(5)),
+                                ">"
+                        ))
+                )
+        ));
+        descriptions.put("6", "int x; x = 7; print(x > 5)");
+
 
         // --- Select mode ---
         while (true) {
