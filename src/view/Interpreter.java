@@ -85,7 +85,19 @@ public class Interpreter {
                 new VariableDeclarationStatement("x", new IntegerType()),
                 new CompoundStatement(
                         new OpenReadFile(new ConstantExpression(new StringValue("src/numbers.txt"))),
-                        new ReadAllFileAutomatically("src/numbers.txt", "x")
+                        new CompoundStatement(
+                                new ReadFile(new ConstantExpression(new StringValue("src/numbers.txt")), "x"),
+                                new CompoundStatement(
+                                        new PrintStatement(new VariableExpression("x")),
+                                        new CompoundStatement(
+                                                new ReadFile(new ConstantExpression(new StringValue("src/numbers.txt")), "x"),
+                                                new CompoundStatement(
+                                                        new PrintStatement(new VariableExpression("x")),
+                                                        new CloseReadFile(new ConstantExpression(new StringValue("src/numbers.txt")))
+                                                )
+                                        )
+                                )
+                        )
                 )
         ));
         descriptions.put("4", "int x; openReadFile('numbers.txt'); readAllFile('numbers.txt', x)");

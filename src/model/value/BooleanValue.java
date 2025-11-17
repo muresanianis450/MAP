@@ -20,4 +20,11 @@ public class BooleanValue implements Value {
     public String toString(){
         return String.valueOf(value);
     }
+
+    @Override
+    public boolean equals(Object o){
+        if ( this == o) return true;
+        if(!(o instanceof BooleanValue other)) return false;
+        return value == other.value;
+    }
 }

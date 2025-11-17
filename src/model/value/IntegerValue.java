@@ -21,4 +21,12 @@ public class IntegerValue implements Value{
     public String toString() {
         return String.valueOf(value);
     }
+
+
+    @Override
+    public boolean equals(Object o){
+        if ( this == o) return true;
+        if(!(o instanceof IntegerValue other)) return false;
+        return value == other.value;
+    }
 }
