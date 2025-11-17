@@ -68,18 +68,8 @@ public record BinaryExpression(String operator, Expression left, Expression righ
             throw new MyException("Equality operators require operands of the same type");
 
         boolean result = switch (operator) {
-            case "==" -> {
-                if (leftTerm.getType() instanceof IntegerType)
-                    yield ((IntegerValue) leftTerm).getValue() == ((IntegerValue) rightTerm).getValue();
-                else
-                    yield ((BooleanValue) leftTerm).getValue() == ((BooleanValue) rightTerm).getValue();
-            }
-            case "!=" -> {
-                if (leftTerm.getType() instanceof IntegerType)
-                    yield ((IntegerValue) leftTerm).getValue() != ((IntegerValue) rightTerm).getValue();
-                else
-                    yield ((BooleanValue) leftTerm).getValue() != ((BooleanValue) rightTerm).getValue();
-            }
+            case "==" -> leftTerm.equals(rightTerm);
+            case "!=" -> !leftTerm.equals(rightTerm);
             default -> throw new MyException("Invalid equality operator: " + operator);
         };
 

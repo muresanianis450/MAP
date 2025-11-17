@@ -38,11 +38,13 @@ public class RelationalExpression implements Expression {
         int n1 = ((IntegerValue) v1).getValue();
         int n2 =  ((IntegerValue) v2).getValue();
 
+
+
         return switch(operator){
             case "<" -> new BooleanValue(n1 < n2);
             case ">" -> new BooleanValue(n1 > n2);
-            case "==" -> new BooleanValue(n1 == n2);
-            case "!=" -> new BooleanValue(n1 != n2);
+            case "==" -> new BooleanValue(v1.equals(v2));
+            case "!=" -> new BooleanValue(!(v1.equals(v2)));
             case "<=" -> new BooleanValue(n1 <= n2);
             case ">=" -> new BooleanValue(n1 >= n2);
             default -> throw new MyException("Invalid relational operand");
