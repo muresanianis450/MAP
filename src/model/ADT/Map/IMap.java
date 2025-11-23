@@ -3,6 +3,8 @@ package model.ADT.Map;
 import model.type.Type;
 import model.value.Value;
 
+import java.util.Map;
+
 public interface IMap<K,V> {
 
     boolean isDefined(String variableName);
@@ -15,4 +17,5 @@ public interface IMap<K,V> {
 
     Value getValue(String variableName);
 
+    Map<String, Value> getContent();
 }
