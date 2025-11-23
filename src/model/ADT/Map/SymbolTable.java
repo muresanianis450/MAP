@@ -44,5 +44,10 @@ public class SymbolTable<K,V> implements IMap<K,V> {
         return map.toString();
     }
 
+    @Override
+    public Map<String, Value> getContent() {
+        return new HashMap<>(map); // return a copy for safety
+    }
+
 
 }
