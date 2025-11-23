@@ -202,7 +202,29 @@ public class Interpreter {
         });
         descriptions.put("9", "Ref int v; new(v, 10); Ref int u; new(u, 20); v = u; print(rH(v)) (unreachable 10 should be deallocated)");
 
-
+        examples.put("9", () -> {
+            Statement program = new CompoundStatement(
+                    new VariableDeclarationStatement("v", new IntegerType()),
+                    new CompoundStatement(
+                            new AssignmentStatement("v", new ConstantExpression(new IntegerValue(4))),
+                            new CompoundStatement(
+                                    new WhileStatement(
+                                            new RelationalExpression(new VariableExpression("v"), new ConstantExpression(new IntegerValue(0)), ">"),
+                                            new CompoundStatement(
+                                                    new PrintStatement(new VariableExpression("v")),
+                                                    new AssignmentStatement(
+                                                            "v",
+                                                            new ArithmeticExpression("-", new VariableExpression("v"), new ConstantExpression(new IntegerValue(1)))
+                                                    )
+                                            )
+                                    ),
+                                    new PrintStatement(new VariableExpression("v"))
+                            )
+                    )
+            );
+            return program;
+        });
+        descriptions.put("9", "int v; v=4; while (v>0) { print(v); v=v-1; }; print(v)");
         // --- Select mode ---
         while (true) {
             System.out.println("\n==============================");
