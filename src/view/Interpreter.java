@@ -178,6 +178,29 @@ public class Interpreter {
         });
         descriptions.put("8", "Ref Ref int a; new(a, v); print(rH(rH(a)))");
 
+        examples.put("9", () -> {
+            // Ref int v; new(v, 10); Ref int u; new(u, 20); v = u; print(rH(v));
+            Statement program = new CompoundStatement(
+                    new VariableDeclarationStatement("v", new RefType(new IntegerType())),
+                    new CompoundStatement(
+                            new NewStatement("v", new ConstantExpression(new IntegerValue(10))),
+                            new CompoundStatement(
+                                    new VariableDeclarationStatement("u", new RefType(new IntegerType())),
+                                    new CompoundStatement(
+                                            new NewStatement("u", new ConstantExpression(new IntegerValue(20))),
+                                            new CompoundStatement(
+                                                    // At this point: heap has 2 entries, v -> 10, u -> 20
+                                                    new AssignmentStatement("v", new VariableExpression("u")),
+                                                    new PrintStatement(new ReadHeapExpression(new VariableExpression("v")))
+                                                    // After assignment, heap entry 10 is unreachable, can be GC'd
+                                            )
+                                    )
+                            )
+                    )
+            );
+            return program;
+        });
+        descriptions.put("9", "Ref int v; new(v, 10); Ref int u; new(u, 20); v = u; print(rH(v)) (unreachable 10 should be deallocated)");
 
 
         // --- Select mode ---

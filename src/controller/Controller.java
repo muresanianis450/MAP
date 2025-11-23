@@ -1,4 +1,5 @@
 package controller;
+import GC.GarbageCollector;
 import model.state.ProgramState;
 import model.statement.Statement;
 import repository.IRepository;
@@ -35,6 +36,14 @@ public class Controller {
             while (!program.executionStack().isEmpty()) {
                 executeOneStep(program);
                 //repository.logPrgStateExec(); ->Accidentally duplicated it
+
+                //Garbage Collector: clean up heap after each step
+                program.heap().setContent(
+                        GarbageCollector.safeGarbageCollector(
+                                program.symbolTable().getContent().values(),
+                                program.heap().getContent()
+                        )
+                );
             }
             System.out.println(program);
         } catch (MyException e) {
