@@ -4,13 +4,17 @@ import exceptions.MyException;
 import model.ADT.FileTable.IFileTable;
 import model.ADT.List.IList;
 import model.ADT.Map.IMap;
+import model.ADT.Heap.IHeap;
 import model.ADT.Stack.IStack;
 import model.statement.Statement;
 import model.value.Value;
 
+
+
 public class ProgramState {
     private final IStack<Statement> executionStack;
     private final IMap<String, Value> symbolTable;
+    private final IHeap heap;
     private final IList<Value> out;
     private final IFileTable fileTable;
 
@@ -18,10 +22,12 @@ public class ProgramState {
                         IMap<String, Value> symbolTable,
                         IList<Value> out,
                         IFileTable fileTable,
+                        IHeap heap,
                         Statement originalProgram) {
 
         this.executionStack = executionStack;
         this.symbolTable = symbolTable;
+        this.heap = heap;
         this.out = out;
         this.fileTable = fileTable;
 
@@ -55,9 +61,15 @@ public class ProgramState {
     }
 
 
+    public IHeap heap(){
+        return heap;
+    }
+
     public boolean isNotCompleted() {
         return !executionStack.isEmpty();
     }
+
+
 
     @Override
     public String toString() {

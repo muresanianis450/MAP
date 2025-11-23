@@ -52,7 +52,7 @@ public class FileTable implements IFileTable {
 
     @Override
     public String toString() {
- //         return table.toString(); -> not working because it returns the toString to an object and won't know what to do
+ //return table.toString(); -> not working because it returns the toString to an object and won't know what to do
 
     StringBuilder sb = new StringBuilder();
     for(Value key : table.keySet()){

@@ -3,6 +3,8 @@ package view;
 import controller.Controller;
 import exceptions.MyException;
 import model.ADT.FileTable.FileTable;
+import model.ADT.Heap.Heap;
+import model.ADT.Heap.Heap;
 import model.ADT.List.ListOut;
 import model.ADT.Map.SymbolTable;
 import model.ADT.Stack.StackExecutionStack;
@@ -15,6 +17,7 @@ import repository.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import java.util.Scanner;
 import java.util.function.Supplier;
 
@@ -163,6 +166,9 @@ public class Interpreter {
                     new SymbolTable(),
                     new ListOut(),
                     new FileTable(),
+                    new Heap(),
+
+
                     program
             );
             programState.executionStack().push(program);
