@@ -13,7 +13,7 @@ public class PrintStatement implements Statement {
 
     @Override
     public ProgramState execute(ProgramState state) throws MyException{
-        var value = expression.evaluate(state.symbolTable());
+        var value = expression.evaluate(state.symbolTable(), state.heap());
         state.out().add(value);
         return state;
     }
