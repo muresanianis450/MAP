@@ -11,5 +11,8 @@ public class StringType implements Type{
     public String toString(){
         return "string";
     }
-
+@Override
+    public boolean equals(Object another){
+        return another instanceof StringType;
+    }
 }

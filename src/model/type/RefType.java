@@ -27,6 +27,6 @@ public class RefType implements Type {
 
     @Override
     public Value defaultValue() {
-        return new model.value.RefValue(0, inner);
+        return new model.value.RefValue(-1, inner);
     }
 }

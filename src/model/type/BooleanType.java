@@ -12,6 +12,10 @@ public class BooleanType implements Type{
     return "bool";
 }
 
+@Override
+    public boolean equals(Object another) {
+    return another instanceof BooleanType;
+}
 }
 
 
