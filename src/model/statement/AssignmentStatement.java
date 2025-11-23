@@ -18,7 +18,7 @@ public class AssignmentStatement implements Statement {
 
     @Override
     public ProgramState execute(ProgramState state) throws MyException{
-        Value value = expression.evaluate(state.symbolTable());
+        Value value = expression.evaluate(state.symbolTable(),state.heap());
         state.symbolTable().update(variableName, value);
         return state;
     }

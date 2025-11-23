@@ -3,6 +3,7 @@ package model.expression;
 
 import exceptions.MyException;
 import model.ADT.FileTable.IFileTable;
+import model.ADT.Heap.IHeap;
 import model.ADT.Map.IMap;
 import model.type.BooleanType;
 import model.type.IntegerType;
@@ -25,9 +26,9 @@ public class RelationalExpression implements Expression {
     }
 
     @Override
-    public Value evaluate(IMap symTable) throws MyException {
-        Value v1 = left.evaluate(symTable);
-        Value v2 = right.evaluate(symTable);
+    public Value evaluate(IMap<String, Value> symTable, IHeap heap) throws MyException {
+        Value v1 = left.evaluate(symTable, heap);
+        Value v2 = right.evaluate(symTable,heap);
 
         if(!(v1.getType() instanceof  IntegerType )||
                 !(v2.getType() instanceof IntegerType) )

@@ -1,6 +1,7 @@
 package model.expression;
 
 import exceptions.MyException;
+import model.ADT.Heap.IHeap;
 import model.ADT.Map.IMap;
 import model.type.BooleanType;
 import model.type.IntegerType;
@@ -13,9 +14,9 @@ public record BinaryExpression(String operator, Expression left, Expression righ
         implements Expression {
 
     @Override
-    public Value evaluate(IMap symbolTable) throws MyException {
-        Value leftTerm = left.evaluate(symbolTable);
-        Value rightTerm = right.evaluate(symbolTable);
+    public Value evaluate(IMap<String, Value> symTable, IHeap heap) throws MyException {
+        Value leftTerm = left.evaluate(symTable, heap);
+        Value rightTerm = right.evaluate(symTable, heap);
 
         return switch (operator) {
             //boolean logic

@@ -20,7 +20,7 @@ public class IfStatement implements Statement{
     }
     @Override
     public ProgramState execute(ProgramState state) throws MyException{
-        Value conditionValue = condition.evaluate(state.symbolTable());
+        Value conditionValue = condition.evaluate(state.symbolTable(),state.heap());
         if(!(conditionValue instanceof BooleanValue booleanValue)){
             throw new UnsupportedOperationException("If statement is not a boolean: " + conditionValue) ;
         }
