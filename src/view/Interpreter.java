@@ -127,6 +127,57 @@ public class Interpreter {
                 )
         ));
         descriptions.put("6", "int x; x = 7; print(x > 5)");
+        // Example 7: Ref int v; new(v, 20); print(rH(v)); wH(v, 30); print(rH(v)+5)
+        examples.put("7", () -> {
+            Statement program =
+                    new CompoundStatement(
+                            new VariableDeclarationStatement("v", new RefType(new IntegerType())),
+                            new CompoundStatement(
+                                    new NewStatement("v", new ConstantExpression(new IntegerValue(20))),
+                                    new CompoundStatement(
+                                            new PrintStatement(new ReadHeapExpression(new VariableExpression("v"))),
+                                            new CompoundStatement(
+                                                    new WriteHeapStatement("v", new ConstantExpression(new IntegerValue(30))),
+                                                    new PrintStatement(
+                                                            new ArithmeticExpression(
+                                                                    "+",
+                                                                    new ReadHeapExpression(new VariableExpression("v")),
+                                                                    new ConstantExpression(new IntegerValue(5))
+
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
+                    );
+            return program;
+        });
+        descriptions.put("7", "Ref int v; new(v, 20); print(rH(v)); wH(v, 30); print(rH(v)+5)");
+
+        // Example 8: Ref Ref int a; new(a, v); print(rH(rH(a)))
+        examples.put("8", () -> {
+            Statement program =
+                    new CompoundStatement(
+                            new VariableDeclarationStatement("v", new RefType(new IntegerType())),
+                            new CompoundStatement(
+                                    new NewStatement("v", new ConstantExpression(new IntegerValue(42))),
+                                    new CompoundStatement(
+                                            new VariableDeclarationStatement("a", new RefType(new RefType(new IntegerType()))),
+                                            new CompoundStatement(
+                                                    new NewStatement("a", new VariableExpression("v")),
+                                                    new PrintStatement(
+                                                            new ReadHeapExpression(
+                                                                    new ReadHeapExpression(new VariableExpression("a"))
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
+                    );
+            return program;
+        });
+        descriptions.put("8", "Ref Ref int a; new(a, v); print(rH(rH(a)))");
+
 
 
         // --- Select mode ---
