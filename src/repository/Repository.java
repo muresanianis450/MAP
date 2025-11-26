@@ -1,11 +1,12 @@
 package repository;
-
+import model.value.Value;
 import exceptions.MyException;
 import model.state.ProgramState;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Repository implements IRepository {
 
@@ -43,6 +44,13 @@ public class Repository implements IRepository {
 
             logFile.println("FileTable:");
             logFile.println(state.fileTable());
+
+            logFile.println("Heap:");
+            Map<Integer,Value> heapContent = state.heap().getContent();
+            for(Map.Entry<Integer, Value> entry : heapContent.entrySet()) {
+                logFile.println(entry.getKey() + " -> " + entry.getValue().toString() + "\n");
+            }
+
 
             logFile.println("------------------------------------------------------------\n");
 

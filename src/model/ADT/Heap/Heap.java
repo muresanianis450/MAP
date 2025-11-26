@@ -10,7 +10,7 @@ public class Heap implements IHeap {
 
     public Heap(){
         this.heap = new HashMap<>();
-        this.freeAddress = 1;
+        this.freeAddress = 0;
     }
 
     private int getFreeAddress(){
