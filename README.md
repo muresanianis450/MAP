@@ -35,7 +35,7 @@ The interpreter executes programs **step-by-step**, showing internal state trans
 --- 
 ## Changes added on 11.10.2025🔨
 
-#### 1. Repository Logging
+###  1. Repository Logging
 - Added `logPrgStateExec()` method to **Repository interface**.
 - Repository logs the **ProgramState** to a text file in append mode.
 - Log includes sections:
@@ -45,7 +45,7 @@ The interpreter executes programs **step-by-step**, showing internal state trans
   - **FileTable**
 - Each stack element is printed in **infix form** (left-root-right traversal).
 
-#### 2. File Operations
+### 2. File Operations
 - Implemented **FileTable** (filename → BufferedReader).
 - Supports only text files with positive integers, one per line.
 - Statements added:
@@ -71,9 +71,9 @@ closeRFile(varf);
 - Supports '<' '>' '==' '!=' '<=' '>='.
 
 ### 5. View (MVC Text Menu)
-- Added **Command** abstract class with subclasses:
-        -**ExitCommand** -> exit program
-        -**RunExample** -> execute a program via Controller
+- Added `Command` abstract class with subclasses:
+        -`ExitCommand` -> exit program
+        -`RunExample` -> execute a program via Controller
 
 ### Example program for this changes
 ```java
@@ -81,4 +81,116 @@ int a;
 int b;
 print(a < b); //true
 print(a >= b); //false
+```
+## Changes added on 26.11.2025🔨
+
+###  1. Heap Management & Reference Types
+
+- `RefType`:
+  ```java
+    Ref(int)
+    Ref(bool)
+    //Nested
+    Ref(Ref(int))
+  ```
+- `RefValue`
+```java
+// RefValue(<heapAddr>,<locationType>);
+new RefValue(1,IntType);
+new RefValue(10,RefType(IntType));
+```
+
+###  2. Heap Table Implementation
+- Internally stored as a **HashMap<Integer,Value>**
+- Tracks the **next free address**
+
+### 3. New Heap-Based Statements & Expressions
+
+- `new(var,expr)`
+  - Evaluates expr
+  - Allocates a new heap cell
+  - Updates var with **RefValue(newAddress,locationType)**;
+
+
+```java
+Heap:     {1 → 20, 2 → (1,int)}
+SymTable: {v → (1,int), a → (2,Ref int)}
+Out:      {(1,int), (2,Ref int)}
+
+```
+
+####  `rh(expr)` - Read from heap
+- Evaluates expr -> must be RefValue
+- Reads the value stored at the address
+- Updates eval() signature : **Value eval(symTable,heap)**
+####  `wH(var,expr) `- Write to heap
+- var exists and has RefType
+- The address inside var is in the heap
+- Expression type matches locationType
+- Replaces heap content at that address
+
+```java
+new(v,20); print(rH(v));
+wH(v,30); print(rH(v)+5);
+```
+
+### 4. Garbage Collector(Safe Version)
+- Implemented a garbage collector that automatically removes unreachable heap entries.
+- This ensures the heap contains only values that are **still accessible** either directly form the SymbolTable or indirectly through chains of references stored inside the heap itself.
+
+#### How it works?🔍
+
+---
+
+1. Collect Directly Referenced Addresses
+- It starts from all reference values stored in the Symbol Table.
+- For every RefValue found, its address is added to the toVisit queue.
+```java
+if (v instanceof RefValue ref)
+    toVisit.add(ref.getAddress());
+```
+
+2. BFS Through the Heap(Indirect References)
+- The collector then performs a Breadth-First Search through the heap:
+  - Takes the next heap address from the queue
+  - Marks it as visited
+  - If the value stored at that address is another RefValue, its address is added back to the queue
+```java
+while (!toVisit.isEmpty()) {
+    int addr = toVisit.poll();
+    if (!visited.contains(addr) && heap.containsKey(addr)) {
+        visited.add(addr);
+
+        Value heapVal = heap.get(addr);
+        if (heapVal instanceof RefValue refInHeap) {
+            toVisit.add(refInHeap.getAddress());
+        }
+    }
+}
+```
+
+3. Heap Filtering
+- Once the set of all **reachable addresses** is computer, the collector creates a **new heap** that keeps only those entries
+```java
+return heap.entrySet().stream()
+    .filter(e -> reachable.contains(e.getKey()))
+    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+```
+
+### 5. While Statement
+- Added the language construct:
+```java
+while (expression) statement
+```
+- Expression must evaluate to BoolValue
+- If **false** -> loop ends
+- If **true** -> Pushes:
+  - the loop body
+  - the while statement(for next iteration)
+```java
+int v; v = 4;
+while (v > 0)
+    print(v);
+    v = v - 1;
+print(v);
 ```
