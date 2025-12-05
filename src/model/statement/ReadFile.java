@@ -58,11 +58,18 @@ public class ReadFile implements Statement {
             throw new MyException("File contains non-integer data!");
         }
 
-        return state;
+//        return state;
+    return null;
     }
+
 
     @Override
     public String toString() {
         return "ReadFile(" + expression + ", " + variableName + ")";
+    }
+
+    @Override
+    public Statement deepCopy() {
+        return  new ReadFile(this.expression, this.variableName);
     }
 }

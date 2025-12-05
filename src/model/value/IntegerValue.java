@@ -29,4 +29,8 @@ public class IntegerValue implements Value{
         if(!(o instanceof IntegerValue other)) return false;
         return value == other.value;
     }
+    @Override
+    public Value deepCopy(){
+        return new IntegerValue(value);
+    }
 }

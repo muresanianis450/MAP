@@ -225,6 +225,49 @@ public class Interpreter {
             return program;
         });
         descriptions.put("9", "int v; v=4; while (v>0) { print(v); v=v-1; }; print(v)");
+
+        // Example 10: Fork example
+        examples.put("10", () -> {
+            // Parent program:
+            // int v = 1;
+            // fork { print(v); v = v + 1; print(v); }
+            // print(v);
+            // v = v * 2;
+            // print(v);
+
+            Statement program =
+                    new CompoundStatement(
+                            new VariableDeclarationStatement("v", new IntegerType()), // parent declares v
+                            new CompoundStatement(
+                                    new AssignmentStatement("v", new ConstantExpression(new IntegerValue(1))),
+                                    new CompoundStatement(
+                                            new ForkStatement(
+                                                    // Forked statement: ONLY operate on v, NO declaration
+                                                    new CompoundStatement(
+                                                            new PrintStatement(new VariableExpression("v")),
+                                                            new CompoundStatement(
+                                                                    new AssignmentStatement("v",
+                                                                            new ArithmeticExpression("+", new VariableExpression("v"), new ConstantExpression(new IntegerValue(1)))
+                                                                    ),
+                                                                    new PrintStatement(new VariableExpression("v"))
+                                                            )
+                                                    )
+                                            ),
+                                            new CompoundStatement(
+                                                    new PrintStatement(new VariableExpression("v")),
+                                                    new AssignmentStatement("v",
+                                                            new ArithmeticExpression("*", new VariableExpression("v"), new ConstantExpression(new IntegerValue(2)))
+                                                    )
+                                            )
+                                    )
+                            )
+                    );
+
+            return program;
+        });
+        descriptions.put("10", "int v=1; fork { print(v); v=v+1; print(v) }; print(v); v=v*2; print(v)");
+
+
         // --- Select mode ---
         while (true) {
             System.out.println("\n==============================");
@@ -254,6 +297,7 @@ public class Interpreter {
 
             Statement program = examples.get(programOption).get(); // fresh instance
             String logFilePath;
+
             System.out.print("Enter log file path (e.g., log.txt): ");
             logFilePath = scanner.nextLine().trim();
 
@@ -263,9 +307,8 @@ public class Interpreter {
                     new ListOut(),
                     new FileTable(),
                     new Heap(),
-
-
                     program
+
             );
             programState.executionStack().push(program);
 
@@ -273,11 +316,12 @@ public class Interpreter {
             repo.addProgram(programState);
             Controller controller = new Controller(repo);
 
+
             if (mainOption.equals("1")) {
                 System.out.print("Display Program State after each step? [y/n]: ");
                 boolean displayState = scanner.nextLine().trim().equalsIgnoreCase("y");
                 try {
-                    repo.logPrgStateExec(); // initial log
+                    repo.logPrgStateExec(programState); // initial log
 
                     while (!programState.executionStack().isEmpty()) {
                         controller.executeOneStep(programState);

@@ -37,11 +37,16 @@ public class OpenReadFile implements Statement {
             throw new MyException("Error opening file: " + e.getMessage());
         }
 
-        return state;
-    }
+        //return state;
+        return null ;     }
 
     @Override
     public String toString() {
         return "OpenReadFile(" + expression + ")";
+    }
+
+    @Override
+    public Statement deepCopy() {
+        return new OpenReadFile(this.expression);
     }
 }

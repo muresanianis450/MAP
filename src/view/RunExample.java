@@ -23,13 +23,13 @@ public class RunExample extends Command {
         System.out.print("> ");
         String option = scanner.nextLine().trim();
 
-        ProgramState program = controller.getRepository().getCurrentProgram();
+        ProgramState program = controller.getRepository().getProgramList().get(0);
 
         try {
             if (option.equals("1")) {
                 // Interactive mode: press ENTER between steps
                 System.out.println("\n--- Interactive Execution ---");
-                controller.getRepository().logPrgStateExec();
+                controller.getRepository().logPrgStateExec(program);
                 while (!program.executionStack().isEmpty()) {
                     System.out.println(program);
                     System.out.println("Press ENTER to execute next step...");

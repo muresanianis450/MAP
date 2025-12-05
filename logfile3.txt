@@ -1,66 +1,195 @@
 ------------------------------------------------------------
+Program ID: 1
 ExeStack:
-(int x; (x= ConstantExpression[value=7]; print(VariableExpression[variableName=x] > ConstantExpression[value=5])))
+(v= ConstantExpression[value=1]; (fork((print(VariableExpression[variableName=v]); (v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v])))); (print(VariableExpression[variableName=v]); v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]]))) | int v
 SymTable:
 {}
 Out:
 []
 FileTable:
 
+Heap:
 ------------------------------------------------------------
 
 ------------------------------------------------------------
+Program ID: 1
 ExeStack:
-(x= ConstantExpression[value=7]; print(VariableExpression[variableName=x] > ConstantExpression[value=5])) | int x
+(v= ConstantExpression[value=1]; (fork((print(VariableExpression[variableName=v]); (v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v])))); (print(VariableExpression[variableName=v]); v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]])))
 SymTable:
-{}
+{v=0}
 Out:
 []
 FileTable:
 
+Heap:
 ------------------------------------------------------------
 
 ------------------------------------------------------------
+Program ID: 1
 ExeStack:
-(x= ConstantExpression[value=7]; print(VariableExpression[variableName=x] > ConstantExpression[value=5]))
+(fork((print(VariableExpression[variableName=v]); (v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v])))); (print(VariableExpression[variableName=v]); v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]])) | v= ConstantExpression[value=1]
 SymTable:
-{x=0}
+{v=0}
 Out:
 []
 FileTable:
 
+Heap:
 ------------------------------------------------------------
 
 ------------------------------------------------------------
+Program ID: 1
 ExeStack:
-print(VariableExpression[variableName=x] > ConstantExpression[value=5]) | x= ConstantExpression[value=7]
+(fork((print(VariableExpression[variableName=v]); (v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v])))); (print(VariableExpression[variableName=v]); v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]]))
 SymTable:
-{x=0}
+{v=1}
 Out:
 []
 FileTable:
 
+Heap:
 ------------------------------------------------------------
 
 ------------------------------------------------------------
+Program ID: 1
 ExeStack:
-print(VariableExpression[variableName=x] > ConstantExpression[value=5])
+(print(VariableExpression[variableName=v]); v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]]) | fork((print(VariableExpression[variableName=v]); (v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v]))))
 SymTable:
-{x=7}
+{v=1}
 Out:
 []
 FileTable:
 
+Heap:
 ------------------------------------------------------------
 
 ------------------------------------------------------------
+Program ID: 1
+ExeStack:
+(print(VariableExpression[variableName=v]); v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]])
+SymTable:
+{v=1}
+Out:
+[]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 2
+ExeStack:
+(print(VariableExpression[variableName=v]); (v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v])))
+SymTable:
+{v=1}
+Out:
+[]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 1
+ExeStack:
+v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]] | print(VariableExpression[variableName=v])
+SymTable:
+{v=1}
+Out:
+[]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 2
+ExeStack:
+(v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v])) | print(VariableExpression[variableName=v])
+SymTable:
+{v=1}
+Out:
+[]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 1
+ExeStack:
+v= ArithmeticExpression[operator=*, left=VariableExpression[variableName=v], right=ConstantExpression[value=2]]
+SymTable:
+{v=1}
+Out:
+[1, 1]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 2
+ExeStack:
+(v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]; print(VariableExpression[variableName=v]))
+SymTable:
+{v=1}
+Out:
+[1, 1]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 1
 ExeStack:
 
 SymTable:
-{x=7}
+{v=2}
 Out:
-[true]
+[1, 1]
 FileTable:
 
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 2
+ExeStack:
+print(VariableExpression[variableName=v]) | v= ArithmeticExpression[operator=+, left=VariableExpression[variableName=v], right=ConstantExpression[value=1]]
+SymTable:
+{v=1}
+Out:
+[1, 1]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 2
+ExeStack:
+print(VariableExpression[variableName=v])
+SymTable:
+{v=2}
+Out:
+[1, 1]
+FileTable:
+
+Heap:
+------------------------------------------------------------
+
+------------------------------------------------------------
+Program ID: 2
+ExeStack:
+
+SymTable:
+{v=2}
+Out:
+[1, 1, 2]
+FileTable:
+
+Heap:
 ------------------------------------------------------------
 

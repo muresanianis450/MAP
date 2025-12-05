@@ -76,4 +76,8 @@ public record BinaryExpression(String operator, Expression left, Expression righ
 
         return new BooleanValue(result);
     }
+    public Expression deepCopy()
+    {
+        return new BinaryExpression(this.operator, this.left, this.right);
+    }
 }

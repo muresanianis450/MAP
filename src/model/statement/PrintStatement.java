@@ -15,7 +15,8 @@ public class PrintStatement implements Statement {
     public ProgramState execute(ProgramState state) throws MyException{
         var value = expression.evaluate(state.symbolTable(), state.heap());
         state.out().add(value);
-        return state;
+        //return state;
+        return null;
     }
 
     @Override
@@ -24,4 +25,8 @@ public class PrintStatement implements Statement {
 
     }
 
+    @Override
+    public Statement deepCopy() {
+        return new PrintStatement(expression.deepCopy());
+    }
 }

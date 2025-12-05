@@ -13,6 +13,11 @@ public record VariableExpression(String variableName) implements Expression {
         }
         return symTable.getValue(variableName);
     }
+    @Override
+    public Expression deepCopy(){
+        return new VariableExpression(this.variableName);
+    }
+
 
 
 }

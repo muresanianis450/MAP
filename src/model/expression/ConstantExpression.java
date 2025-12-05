@@ -9,4 +9,9 @@ public record ConstantExpression(Value value) implements Expression {
     public Value evaluate(IMap<String, Value> symTable, IHeap heap) {
         return value;
     }
+
+    @Override
+    public Expression deepCopy() {
+        return new ConstantExpression(value.deepCopy());
+    }
 }

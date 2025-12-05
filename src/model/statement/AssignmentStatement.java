@@ -20,11 +20,17 @@ public class AssignmentStatement implements Statement {
     public ProgramState execute(ProgramState state) throws MyException{
         Value value = expression.evaluate(state.symbolTable(),state.heap());
         state.symbolTable().update(variableName, value);
-        return state;
+     //   return state;
+        return null;
     }
 
     @Override
     public String toString(){
         return variableName + "= " + expression;
+    }
+
+    @Override
+    public Statement deepCopy() {
+        return new AssignmentStatement(variableName, expression.deepCopy());
     }
 }

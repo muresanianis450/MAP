@@ -1,5 +1,6 @@
 package model.statement;
 
+import com.sun.source.tree.StatementTree;
 import exceptions.MyException;
 import model.ADT.FileTable.IFileTable;
 import model.expression.Expression;
@@ -42,11 +43,18 @@ public class CloseReadFile implements Statement {
         // Remove entry from FileTable
         fileTable.remove(stringValue);
 
-        return state;
+        //return state;
+
+        return null;
     }
 
     @Override
     public String toString() {
         return "CloseReadFile(" + expression + ")";
+    }
+
+    @Override
+    public Statement deepCopy() {
+        return  new CloseReadFile(this.expression);
     }
 }

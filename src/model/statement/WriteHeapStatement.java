@@ -53,10 +53,20 @@ public class WriteHeapStatement implements Statement{
         }
         //update heap
         heap.update(address, evaluateValue);
-        return state;
+        //return state;
+         return null;
     }
     @Override
     public String toString(){
         return "wH(" + varName + ", " + expression.toString() + ")";
     }
+
+    @Override
+    public Statement deepCopy() {
+        return new WriteHeapStatement(varName, expression.deepCopy());
+    }
 }
+
+
+
+

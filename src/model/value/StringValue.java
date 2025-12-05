@@ -21,7 +21,7 @@ public class StringValue implements Value {
 
     @Override
     public String toString() {
-        return "\"" + value + "\"";
+        return value;
     }
 
     @Override
@@ -34,5 +34,10 @@ public class StringValue implements Value {
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    @Override
+    public Value deepCopy(){
+        return new StringValue(value);
     }
 }

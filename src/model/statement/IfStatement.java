@@ -31,12 +31,17 @@ public class IfStatement implements Statement{
             state.executionStack().push(elseStatement);
         }
 
-        return state;
-    }
+        //return state;
+        return null;     }
 
     @Override
     public String toString(){
         return "if(" + condition + ")"+"then(" + thenStatement +") else( " + elseStatement;
 
+    }
+
+    @Override
+    public Statement deepCopy(){
+        return new IfStatement(condition.deepCopy(), thenStatement.deepCopy(), elseStatement);
     }
 }

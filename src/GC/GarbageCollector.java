@@ -20,7 +20,7 @@ public class GarbageCollector {
                 toVisit.add(ref.getAddress());
             }
         }
-        //BFS/DFS to follow RefValues inside the heap
+        //BFS to follow RefValues inside the heap
         while (!toVisit.isEmpty()) {
 
             int addr = toVisit.poll();

@@ -19,12 +19,18 @@ public class VariableDeclarationStatement implements Statement{
         }
         //state.symbolTable().declareVariable(variableName, type); BEFORE THE CHANGE
         state.symbolTable().declareVariable(variableName, type.defaultValue());
-        return state;
-    }
+        //return state;
+        return null ;     }
 
     @Override
     public String toString(){
         return type +" "+variableName;
     }
+
+    @Override
+    public Statement deepCopy() {
+        return new VariableDeclarationStatement(variableName, type);
+    }
 }
+
 

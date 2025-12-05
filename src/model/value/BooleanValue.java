@@ -27,4 +27,8 @@ public class BooleanValue implements Value {
         if(!(o instanceof BooleanValue other)) return false;
         return value == other.value;
     }
+    @Override
+    public Value deepCopy(){
+        return  new BooleanValue(value);
+    }
 }

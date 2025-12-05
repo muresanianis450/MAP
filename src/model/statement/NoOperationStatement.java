@@ -5,10 +5,14 @@ public class NoOperationStatement implements Statement{
 
     @Override
     public ProgramState execute(ProgramState state) {
-        return state; // does nothing
+        return null; // does nothing
     }
     @Override
     public String toString() {
         return "no, operation";
+    }
+    @Override
+    public Statement deepCopy() {
+        return new NoOperationStatement();
     }
 }

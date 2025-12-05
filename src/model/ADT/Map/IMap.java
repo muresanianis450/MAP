@@ -18,4 +18,6 @@ public interface IMap<K,V> {
     Value getValue(String variableName);
 
     Map<String, Value> getContent();
+
+    IMap<String,Value> deepCopy();
 }

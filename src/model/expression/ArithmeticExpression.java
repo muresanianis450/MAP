@@ -39,4 +39,7 @@ public record ArithmeticExpression(String operator, Expression left, Expression 
         };
 
     }
+    public Expression deepCopy(){
+        return new ArithmeticExpression(this.operator, this.left, this.right);
+    }
 }

@@ -39,7 +39,7 @@ public class WhileStatement implements Statement {
         }
         //else do nothing -> the loop ends
 
-        return state;
+        return null;
 
     }
 
@@ -47,4 +47,11 @@ public class WhileStatement implements Statement {
     public String toString(){
         return "while(" + condition.toString()+")" + body.toString();
     }
+
+    @Override
+    public Statement deepCopy(){
+        return new WhileStatement(condition.deepCopy(), body.deepCopy());
+    }
 }
+
+

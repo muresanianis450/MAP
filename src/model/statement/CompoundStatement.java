@@ -14,7 +14,7 @@ public class CompoundStatement implements Statement{
     public ProgramState execute(ProgramState state) {
         state.executionStack().push(second);
         state.executionStack().push(first);
-        return state;
+        return null;
     }
 
     @Override
@@ -22,4 +22,8 @@ public class CompoundStatement implements Statement{
         return "(" + first + "; " + second + ")";
     }
 
+    @Override
+    public Statement deepCopy(){
+        return new CompoundStatement(first.deepCopy(), second.deepCopy());
+    }
 }

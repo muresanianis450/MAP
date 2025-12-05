@@ -57,4 +57,9 @@ public class RelationalExpression implements Expression {
         return left + " " +  operator + " " + right;
     }
 
+    @Override
+    public Expression deepCopy() {
+        return new RelationalExpression(left.deepCopy(), right.deepCopy(), operator);
+    }
+
 }

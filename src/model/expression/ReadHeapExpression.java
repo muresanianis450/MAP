@@ -41,4 +41,9 @@ public class ReadHeapExpression implements Expression{
         return "rH(" + expression.toString() + ")";
     }
 
+    @Override
+    public Expression deepCopy() {
+        return new ReadHeapExpression(this.expression.deepCopy());
+    }
+
 }

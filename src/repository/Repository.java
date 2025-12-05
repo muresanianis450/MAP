@@ -10,29 +10,35 @@ import java.util.Map;
 
 public class Repository implements IRepository {
 
-    private final List<ProgramState> programStates = new ArrayList<>();
+    private List<ProgramState> programStates;
     private final String logFilePath;
 
     public Repository(String logFilePath) {
         this.logFilePath = logFilePath;
+        this.programStates = new ArrayList<>();
     }
+
+
 
     @Override
     public void addProgram(ProgramState programState) {
+        //only 1 initial program is added, forks create more later
         programStates.add(programState);
     }
 
-    @Override
+    /*@Override
     public ProgramState getCurrentProgram() {
         return programStates.get(0);
-    }
+    }*/
 
     @Override
-    public void logPrgStateExec() throws MyException {
-        ProgramState state = getCurrentProgram();
+    public void logPrgStateExec(ProgramState state) throws MyException {
+        //ProgramState state = getCurrentProgram();
         try (PrintWriter logFile = new PrintWriter(new BufferedWriter(new FileWriter(logFilePath, true)))) {
 
             logFile.println("------------------------------------------------------------");
+            logFile.println("Program ID: "+ state.id());
+
             logFile.println("ExeStack:");
             logFile.println(state.executionStack());  // will rely on stack's custom toString()
 
@@ -62,5 +68,15 @@ public class Repository implements IRepository {
     @Override
     public String toString() {
         return programStates.toString();
+    }
+
+    @Override
+    public List<ProgramState> getProgramList(){
+        return programStates;
+    }
+
+    @Override
+    public void setProgramList(List<ProgramState> newProgramList){
+        this.programStates = newProgramList;
     }
 }

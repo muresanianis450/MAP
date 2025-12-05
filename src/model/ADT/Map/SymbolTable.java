@@ -49,5 +49,14 @@ public class SymbolTable<K,V> implements IMap<K,V> {
         return new HashMap<>(map); // return a copy for safety
     }
 
+    @Override
+    public IMap<String, Value> deepCopy() {
+        IMap<String, Value> newMap = new SymbolTable();
+        for (String key : map.keySet()) {
+            newMap.declareVariable(key, map.get(key).deepCopy()); // deep copy of the Value
+        }
+        return newMap;
+    }
+
 
 }

@@ -7,4 +7,6 @@ import model.ADT.Heap.IHeap;
 
 public interface Expression {
     Value evaluate(IMap<String,Value> symTable, IHeap heap) throws MyException;
+
+    Expression deepCopy();
 }

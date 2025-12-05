@@ -36,4 +36,8 @@ public class RefValue implements Value {
                     locationType.equals(otherRef.locationType);
         return false;
     }
+    @Override
+    public Value  deepCopy() {
+        return new RefValue(address, locationType);
+    }
 }
