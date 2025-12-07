@@ -92,4 +92,8 @@ public class ProgramState {
                 "\nHeap:\n" + heap +
                 "\n------------------------------------------------------------\n";
     }
+
+    public String getId() {
+          return Integer.toString(id);
+    }
 }

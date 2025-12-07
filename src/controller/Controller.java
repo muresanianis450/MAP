@@ -1,109 +1,78 @@
 package controller;
-import GC.GarbageCollector;
+
 import model.state.ProgramState;
-import model.statement.Statement;
 import repository.IRepository;
 import exceptions.MyException;
 
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
-
 
 public class Controller {
 
-    private final IRepository repository;
+    private IRepository repo;
+    private ExecutorService executor;
 
-    public Controller(IRepository repository) {
-        this.repository = repository;
+    public Controller(IRepository r) { this.repo = r; }
+
+    public List<ProgramState> removeCompletedPrg(List<ProgramState> inPrgList) {
+        return inPrgList.stream()
+                .filter(ProgramState::isNotCompleted)
+                .collect(Collectors.toList());
     }
 
-        public void executeOneStep(ProgramState state) throws MyException{
-            if(state.executionStack().isEmpty()){
-                throw new MyException("Execution stack is empty!"); //TODO LOGFILE DOES NOT SHOW MULTIPLE PROGRAM ID's
-            }
+    // OLD NAME: executeOneStep
+    // NEW REQUIRED NAME: oneStepForAllPrg
+    public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException {
 
-            //Pop the top statement
-            Statement current = state.executionStack().pop();
-            ProgramState newPrg = current.execute(state);
-
-            //LOG parent state after execution
-            repository.logPrgStateExec(state);
-
-            //If a fork occured
-            if(newPrg != null){
-                repository.addProgram(newPrg);
-
-                //LOG the new thread too
-
-                repository.logPrgStateExec(newPrg);
-            }
-        }
-
-    //Remove completed programs
-
-    public void oneStepForALlPrograms(List<ProgramState> programList) throws MyException{
-
-        //run one step for each program
-        List<ProgramState> newPrograms = programList.stream()
-                .map(prg -> {
-                    try{
-                        return prg.oneStep();
-                    }catch(MyException e){
-                        System.out.println(e.getMessage());
-                        return null;
-                    }
-                })
-                .filter(p -> p!=null) //keep only forks
-                .collect(Collectors.toList());
-
-        programList.addAll(newPrograms);
-
-        //log every program
-        programList.forEach(prg ->{
-            try{ repository.logPrgStateExec(prg);}
-            catch(MyException e){ throw new RuntimeException(e);}
+        // log each PrgState BEFORE execution
+        prgList.forEach(prg -> {
+            try { repo.logPrgStateExec(prg); }
+            catch (MyException e) { throw new RuntimeException(e); }
         });
 
-        //update repo
-        repository.setProgramList(programList);
-    }
-
-    private List<ProgramState> removeCompletedProgram(List<ProgramState> programList){
-        return programList.stream()
-                .filter(p -> !p.executionStack().isEmpty())
+        // Prepare callables
+        List<Callable<ProgramState>> callList = prgList.stream()
+                .map((ProgramState p) -> (Callable<ProgramState>) (() -> p.oneStep()))
                 .collect(Collectors.toList());
+
+        List<ProgramState> newPrgList = executor.invokeAll(callList).stream()
+                .map(future -> {
+                    try { return future.get(); }
+                    catch (Exception e) { System.out.println(e.getMessage()); return null; }
+                })
+                .filter(p -> p != null)
+                .collect(Collectors.toList());
+
+        prgList.addAll(newPrgList);
+
+        // log AFTER execution
+        prgList.forEach(prg -> {
+            try { repo.logPrgStateExec(prg); }
+            catch (MyException e) { throw new RuntimeException(e); }
+        });
+
+        repo.setProgramList(prgList);
     }
 
+    public void allStep() throws InterruptedException {
 
-    public void executeAllSteps() {
+        executor = Executors.newFixedThreadPool(2);
 
-        List<ProgramState> programList = removeCompletedProgram(repository.getProgramList());
+        List<ProgramState> prgList = removeCompletedPrg(repo.getProgramList());
 
-        try {
-            while (!programList.isEmpty()) {
+        while (prgList.size() > 0) {
 
-               oneStepForALlPrograms(programList);
+            oneStepForAllPrg(prgList);
 
-                //Garbage Collector for ALL states
-                for(ProgramState prg: programList){
-                    prg.heap().setContent(
-                            GarbageCollector.safeGarbageCollector(
-                                    prg.symbolTable().getContent().values(),
-                                    prg.heap().getContent()
-                            )
-                    );
-                }
-
-               programList = removeCompletedProgram(repository.getProgramList());
-
-            }
-        } catch (MyException e) {
-            System.out.println(e.getMessage() + "HERE") ;
+            prgList = removeCompletedPrg(repo.getProgramList());
         }
-    }
 
+        executor.shutdownNow();
+
+        repo.setProgramList(prgList);
+    }
     public IRepository getRepository() {
-        return repository;
+        return repo;
     }
 }
-

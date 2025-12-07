@@ -226,37 +226,56 @@ public class Interpreter {
         });
         descriptions.put("9", "int v; v=4; while (v>0) { print(v); v=v-1; }; print(v)");
 
-        // Example 10: Fork example
+        // Example 10: Fork with Ref example
         examples.put("10", () -> {
-            // Parent program:
-            // int v = 1;
-            // fork { print(v); v = v + 1; print(v); }
-            // print(v);
-            // v = v * 2;
-            // print(v);
+
+            // int v; Ref int a; v=10; new(a,22);
+            // fork( wH(a,30); v=32; print(v); print(rH(a)) );
+            // print(v); print(rH(a));
 
             Statement program =
                     new CompoundStatement(
-                            new VariableDeclarationStatement("v", new IntegerType()), // parent declares v
+                            new VariableDeclarationStatement("v", new IntegerType()),
                             new CompoundStatement(
-                                    new AssignmentStatement("v", new ConstantExpression(new IntegerValue(1))),
+                                    new VariableDeclarationStatement("a", new RefType(new IntegerType())),
                                     new CompoundStatement(
-                                            new ForkStatement(
-                                                    // Forked statement: ONLY operate on v, NO declaration
-                                                    new CompoundStatement(
-                                                            new PrintStatement(new VariableExpression("v")),
-                                                            new CompoundStatement(
-                                                                    new AssignmentStatement("v",
-                                                                            new ArithmeticExpression("+", new VariableExpression("v"), new ConstantExpression(new IntegerValue(1)))
-                                                                    ),
-                                                                    new PrintStatement(new VariableExpression("v"))
-                                                            )
-                                                    )
-                                            ),
+                                            new AssignmentStatement("v", new ConstantExpression(new IntegerValue(10))),
                                             new CompoundStatement(
-                                                    new PrintStatement(new VariableExpression("v")),
-                                                    new AssignmentStatement("v",
-                                                            new ArithmeticExpression("*", new VariableExpression("v"), new ConstantExpression(new IntegerValue(2)))
+                                                        new NewStatement(
+                                                            "a",
+                                                            new ConstantExpression(new IntegerValue(22))
+                                                    ),
+                                                    new CompoundStatement(
+
+                                                            // fork(...)
+                                                            new ForkStatement(
+                                                                    new CompoundStatement(
+                                                                            new WriteHeapStatement(
+                                                                                    "a",
+                                                                                    new ConstantExpression(new IntegerValue(30))
+                                                                            ),
+                                                                            new CompoundStatement(
+                                                                                    new AssignmentStatement(
+                                                                                            "v",
+                                                                                            new ConstantExpression(new IntegerValue(32))
+                                                                                    ),
+                                                                                    new CompoundStatement(
+                                                                                            new PrintStatement(new VariableExpression("v")),
+                                                                                            new PrintStatement(
+                                                                                                    new ReadHeapExpression(new VariableExpression("a"))
+                                                                                            )
+                                                                                    )
+                                                                            )
+                                                                    )
+                                                            ),
+
+                                                            // print(v); print(rH(a));
+                                                            new CompoundStatement(
+                                                                    new PrintStatement(new VariableExpression("v")),
+                                                                    new PrintStatement(
+                                                                            new ReadHeapExpression(new VariableExpression("a"))
+                                                                    )
+                                                            )
                                                     )
                                             )
                                     )
@@ -265,7 +284,11 @@ public class Interpreter {
 
             return program;
         });
-        descriptions.put("10", "int v=1; fork { print(v); v=v+1; print(v) }; print(v); v=v*2; print(v)");
+
+        descriptions.put("10",
+                "int v; Ref int a; v=10; new(a,22); " +
+                        "fork(wH(a,30); v=32; print(v); print(rH(a))); " +
+                        "print(v); print(rH(a));");
 
 
         // --- Select mode ---
@@ -324,7 +347,7 @@ public class Interpreter {
                     repo.logPrgStateExec(programState); // initial log
 
                     while (!programState.executionStack().isEmpty()) {
-                        controller.executeOneStep(programState);
+                        controller.oneStepForAllPrg(repo.getProgramList());
 
                         if (displayState) {
                             System.out.println("ExeStack=" + programState.executionStack());
@@ -336,12 +359,12 @@ public class Interpreter {
                     }
 
                     System.out.println("Final Output: " + programState.out());
-                } catch (MyException e) {
+                } catch (MyException | InterruptedException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
             } else if (mainOption.equals("2")) {
                 try {
-                    controller.executeAllSteps();
+                    controller.allStep();
                     System.out.println("Execution finished. Check the log file at: " + logFilePath);
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());

@@ -23,30 +23,44 @@ public class RunExample extends Command {
         System.out.print("> ");
         String option = scanner.nextLine().trim();
 
-        ProgramState program = controller.getRepository().getProgramList().get(0);
-
         try {
             if (option.equals("1")) {
-                // Interactive mode: press ENTER between steps
+                // Interactive mode
                 System.out.println("\n--- Interactive Execution ---");
-                controller.getRepository().logPrgStateExec(program);
-                while (!program.executionStack().isEmpty()) {
-                    System.out.println(program);
+
+                while (true) {
+                    var programs = controller.getRepository().getProgramList();
+
+                    if (programs.isEmpty()) {
+                        System.out.println("Program finished successfully.");
+                        break;
+                    }
+
+                    // print ALL current program states
+                    for (ProgramState p : programs) {
+                        System.out.println("\n=== PROGRAM " + p.getId() + " ===");
+                        System.out.println(p);
+                        controller.getRepository().logPrgStateExec(p);
+                    }
+
                     System.out.println("Press ENTER to execute next step...");
                     scanner.nextLine();
-                    controller.executeOneStep(program);
+
+                    controller.oneStepForAllPrg(controller.getRepository().getProgramList());
                 }
-                System.out.println("\nProgram finished successfully.");
-                System.out.println(program);
-            } else if (option.equals("2")) {
+            }
+            else if (option.equals("2")) {
                 // Full execution mode
                 System.out.println("\n--- Full Execution ---");
-                controller.executeAllSteps();
-            } else {
+                controller.oneStepForAllPrg(controller.getRepository().getProgramList());
+            }
+            else {
                 System.out.println("Invalid option.\n");
             }
         } catch (MyException e) {
             System.out.println("Execution error: " + e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
