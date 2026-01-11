@@ -32,4 +32,8 @@ public class StackExecutionStack<T> implements IStack<T>  {
         }
         return sb.toString();
     }
+
+    public List<T> getInternalList(){
+        return stack;
+    }
 }

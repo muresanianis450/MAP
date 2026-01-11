@@ -3,9 +3,11 @@ package model.expression;
 import exceptions.MyException;
 import model.ADT.Heap.IHeap;
 import model.ADT.Map.IMap;
+import model.type.Type;
 import model.value.Value;
 import model.value.RefValue;
 import model.expression.Expression;
+import model.type.RefType;
 
 public class ReadHeapExpression implements Expression{
     private final Expression expression;
@@ -44,6 +46,20 @@ public class ReadHeapExpression implements Expression{
     @Override
     public Expression deepCopy() {
         return new ReadHeapExpression(this.expression.deepCopy());
+    }
+
+    @Override
+    public Type typeCheck(IMap<String, Type> typeEnv) throws MyException {
+        // Type-check the inner expression
+        Type innerType = expression.typeCheck(typeEnv);
+
+        // The inner expression must be a RefType
+        if (!(innerType instanceof RefType refType)) {
+            throw new MyException("ReadHeapExpression: expression is not of RefType");
+        }
+
+        // Return the type stored in the reference
+        return refType.getInner();
     }
 
 }

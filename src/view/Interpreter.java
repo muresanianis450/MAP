@@ -1,377 +1,129 @@
-package view;
+    package view;
 
-import controller.Controller;
-import exceptions.MyException;
-import model.ADT.FileTable.FileTable;
-import model.ADT.Heap.Heap;
-import model.ADT.Heap.Heap;
-import model.ADT.List.ListOut;
-import model.ADT.Map.SymbolTable;
-import model.ADT.Stack.StackExecutionStack;
-import model.expression.*;
-import model.state.ProgramState;
-import model.statement.*;
-import model.type.*;
-import model.value.*;
-import repository.Repository;
+    import controller.Controller;
+    import exceptions.MyException;
+    import model.ADT.FileTable.FileTable;
+    import model.ADT.Heap.Heap;
+    import model.ADT.Heap.Heap;
+    import model.ADT.List.ListOut;
+    import model.ADT.Map.SymbolTable;
+    import model.ADT.Stack.StackExecutionStack;
+    import model.expression.*;
+    import model.state.ProgramState;
+    import model.statement.*;
+    import model.type.*;
+    import model.value.*;
+    import repository.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
 
-import java.util.Scanner;
-import java.util.function.Supplier;
+    import java.util.Scanner;
+    import java.util.function.Supplier;
 
-public class Interpreter {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        Map<String, Supplier<Statement>> examples = new HashMap<>();
-        Map<String, String> descriptions = new HashMap<>();
-
-        examples.put("1", () -> new CompoundStatement(
-                new VariableDeclarationStatement("v", new IntegerType()),
-                new CompoundStatement(
-                        new AssignmentStatement("v", new ConstantExpression(new IntegerValue(2))),
-                        new PrintStatement(new VariableExpression("v"))
-                )
-        ));
-        descriptions.put("1", "int v; v = 2; print(v)");
-
-        examples.put("2", () -> new CompoundStatement(
-                new VariableDeclarationStatement("a", new IntegerType()),
-                new CompoundStatement(
-                        new VariableDeclarationStatement("b", new IntegerType()),
-                        new CompoundStatement(
-                                new AssignmentStatement("a",
-                                        new BinaryExpression("+",
-                                                new ConstantExpression(new IntegerValue(2)),
-                                                new BinaryExpression("*",
-                                                        new ConstantExpression(new IntegerValue(3)),
-                                                        new ConstantExpression(new IntegerValue(5))
-                                                )
-                                        )
-                                ),
-                                new CompoundStatement(
-                                        new AssignmentStatement("b",
-                                                new BinaryExpression("+",
-                                                        new VariableExpression("a"),
-                                                        new ConstantExpression(new IntegerValue(1))
-                                                )
-                                        ),
-                                        new PrintStatement(new VariableExpression("b"))
-                                )
-                        )
-                )
-        ));
-        descriptions.put("2", "int a; int b; a = 2 + 3*5; b = a + 1; print(b)");
-
-        examples.put("3", () -> new CompoundStatement(
-                new VariableDeclarationStatement("a", new BooleanType()),
-                new CompoundStatement(
-                        new VariableDeclarationStatement("v", new IntegerType()),
-                        new CompoundStatement(
-                                new AssignmentStatement("a", new ConstantExpression(new BooleanValue(true))),
-                                new CompoundStatement(
-                                        new IfStatement(
-                                                new VariableExpression("a"),
-                                                new AssignmentStatement("v", new ConstantExpression(new IntegerValue(2))),
-                                                new AssignmentStatement("v", new ConstantExpression(new IntegerValue(3)))
-                                        ),
-                                        new PrintStatement(new VariableExpression("v"))
-                                )
-                        )
-                )
-        ));
-        descriptions.put("3", "bool a; int v; a = true; if (a) then v=2 else v=3; print(v)");
-
-        examples.put("4", () -> new CompoundStatement(
-                new VariableDeclarationStatement("x", new IntegerType()),
-                new CompoundStatement(
-                        new OpenReadFile(new ConstantExpression(new StringValue("src/numbers.txt"))),
-                        new CompoundStatement(
-                                new ReadFile(new ConstantExpression(new StringValue("src/numbers.txt")), "x"),
-                                new CompoundStatement(
-                                        new PrintStatement(new VariableExpression("x")),
-                                        new CompoundStatement(
-                                                new ReadFile(new ConstantExpression(new StringValue("src/numbers.txt")), "x"),
-                                                new CompoundStatement(
-                                                        new PrintStatement(new VariableExpression("x")),
-                                                        new CloseReadFile(new ConstantExpression(new StringValue("src/numbers.txt")))
-                                                )
-                                        )
-                                )
-                        )
-                )
-        ));
-        descriptions.put("4", "int x; openReadFile('numbers.txt'); readAllFile('numbers.txt', x)");
-
-        examples.put("5", () -> new CompoundStatement(
-                new VariableDeclarationStatement("s", new StringType()),
-                new CompoundStatement(
-                        new AssignmentStatement("s", new ConstantExpression(new StringValue("Hello, World!"))),
-                        new PrintStatement(new VariableExpression("s"))
-                )
-        ));
-        descriptions.put("5", "string s; s = \"Hello, World!\"; print(s)");
-
-        // Example 6: Relational Expression
-        examples.put("6", () -> new CompoundStatement(
-                new VariableDeclarationStatement("x", new IntegerType()),
-                new CompoundStatement(
-                        new AssignmentStatement("x", new ConstantExpression(new IntegerValue(7))),
-                        new PrintStatement(new RelationalExpression(
-                                new VariableExpression("x"),
-                                new ConstantExpression(new IntegerValue(5)),
-                                ">"
-                        ))
-                )
-        ));
-        descriptions.put("6", "int x; x = 7; print(x > 5)");
-        // Example 7: Ref int v; new(v, 20); print(rH(v)); wH(v, 30); print(rH(v)+5)
-        examples.put("7", () -> {
-            Statement program =
-                    new CompoundStatement(
-                            new VariableDeclarationStatement("v", new RefType(new IntegerType())),
-                            new CompoundStatement(
-                                    new NewStatement("v", new ConstantExpression(new IntegerValue(20))),
-                                    new CompoundStatement(
-                                            new PrintStatement(new ReadHeapExpression(new VariableExpression("v"))),
-                                            new CompoundStatement(
-                                                    new WriteHeapStatement("v", new ConstantExpression(new IntegerValue(30))),
-                                                    new PrintStatement(
-                                                            new ArithmeticExpression(
-                                                                    "+",
-                                                                    new ReadHeapExpression(new VariableExpression("v")),
-                                                                    new ConstantExpression(new IntegerValue(5))
-
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            )
-                    );
-            return program;
-        });
-        descriptions.put("7", "Ref int v; new(v, 20); print(rH(v)); wH(v, 30); print(rH(v)+5)");
-
-        // Example 8: Ref Ref int a; new(a, v); print(rH(rH(a)))
-        examples.put("8", () -> {
-            Statement program =
-                    new CompoundStatement(
-                            new VariableDeclarationStatement("v", new RefType(new IntegerType())),
-                            new CompoundStatement(
-                                    new NewStatement("v", new ConstantExpression(new IntegerValue(42))),
-                                    new CompoundStatement(
-                                            new VariableDeclarationStatement("a", new RefType(new RefType(new IntegerType()))),
-                                            new CompoundStatement(
-                                                    new NewStatement("a", new VariableExpression("v")),
-                                                    new PrintStatement(
-                                                            new ReadHeapExpression(
-                                                                    new ReadHeapExpression(new VariableExpression("a"))
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            )
-                    );
-            return program;
-        });
-        descriptions.put("8", "Ref Ref int a; new(a, v); print(rH(rH(a)))");
-
-        examples.put("9", () -> {
-            // Ref int v; new(v, 10); Ref int u; new(u, 20); v = u; print(rH(v));
-            Statement program = new CompoundStatement(
-                    new VariableDeclarationStatement("v", new RefType(new IntegerType())),
-                    new CompoundStatement(
-                            new NewStatement("v", new ConstantExpression(new IntegerValue(10))),
-                            new CompoundStatement(
-                                    new VariableDeclarationStatement("u", new RefType(new IntegerType())),
-                                    new CompoundStatement(
-                                            new NewStatement("u", new ConstantExpression(new IntegerValue(20))),
-                                            new CompoundStatement(
-                                                    // At this point: heap has 2 entries, v -> 10, u -> 20
-                                                    new AssignmentStatement("v", new VariableExpression("u")),
-                                                    new PrintStatement(new ReadHeapExpression(new VariableExpression("v")))
-                                                    // After assignment, heap entry 10 is unreachable, can be GC'd
-                                            )
-                                    )
-                            )
-                    )
-            );
-            return program;
-        });
-        descriptions.put("9", "Ref int v; new(v, 10); Ref int u; new(u, 20); v = u; print(rH(v)) (unreachable 10 should be deallocated)");
-
-        examples.put("9", () -> {
-            Statement program = new CompoundStatement(
-                    new VariableDeclarationStatement("v", new IntegerType()),
-                    new CompoundStatement(
-                            new AssignmentStatement("v", new ConstantExpression(new IntegerValue(4))),
-                            new CompoundStatement(
-                                    new WhileStatement(
-                                            new RelationalExpression(new VariableExpression("v"), new ConstantExpression(new IntegerValue(0)), ">"),
-                                            new CompoundStatement(
-                                                    new PrintStatement(new VariableExpression("v")),
-                                                    new AssignmentStatement(
-                                                            "v",
-                                                            new ArithmeticExpression("-", new VariableExpression("v"), new ConstantExpression(new IntegerValue(1)))
-                                                    )
-                                            )
-                                    ),
-                                    new PrintStatement(new VariableExpression("v"))
-                            )
-                    )
-            );
-            return program;
-        });
-        descriptions.put("9", "int v; v=4; while (v>0) { print(v); v=v-1; }; print(v)");
-
-        // Example 10: Fork with Ref example
-        examples.put("10", () -> {
-
-            // int v; Ref int a; v=10; new(a,22);
-            // fork( wH(a,30); v=32; print(v); print(rH(a)) );
-            // print(v); print(rH(a));
-
-            Statement program =
-                    new CompoundStatement(
-                            new VariableDeclarationStatement("v", new IntegerType()),
-                            new CompoundStatement(
-                                    new VariableDeclarationStatement("a", new RefType(new IntegerType())),
-                                    new CompoundStatement(
-                                            new AssignmentStatement("v", new ConstantExpression(new IntegerValue(10))),
-                                            new CompoundStatement(
-                                                        new NewStatement(
-                                                            "a",
-                                                            new ConstantExpression(new IntegerValue(22))
-                                                    ),
-                                                    new CompoundStatement(
-
-                                                            // fork(...)
-                                                            new ForkStatement(
-                                                                    new CompoundStatement(
-                                                                            new WriteHeapStatement(
-                                                                                    "a",
-                                                                                    new ConstantExpression(new IntegerValue(30))
-                                                                            ),
-                                                                            new CompoundStatement(
-                                                                                    new AssignmentStatement(
-                                                                                            "v",
-                                                                                            new ConstantExpression(new IntegerValue(32))
-                                                                                    ),
-                                                                                    new CompoundStatement(
-                                                                                            new PrintStatement(new VariableExpression("v")),
-                                                                                            new PrintStatement(
-                                                                                                    new ReadHeapExpression(new VariableExpression("a"))
-                                                                                            )
-                                                                                    )
-                                                                            )
-                                                                    )
-                                                            ),
-
-                                                            // print(v); print(rH(a));
-                                                            new CompoundStatement(
-                                                                    new PrintStatement(new VariableExpression("v")),
-                                                                    new PrintStatement(
-                                                                            new ReadHeapExpression(new VariableExpression("a"))
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            )
-                    );
-
-            return program;
-        });
-
-        descriptions.put("10",
-                "int v; Ref int a; v=10; new(a,22); " +
-                        "fork(wH(a,30); v=32; print(v); print(rH(a))); " +
-                        "print(v); print(rH(a));");
+    public class Interpreter {
+        public static void main(String[] args) {
+            Scanner scanner = new Scanner(System.in);
 
 
-        // --- Select mode ---
-        while (true) {
-            System.out.println("\n==============================");
-            System.out.println("Select mode:");
-            System.out.println("1) Interactive execution (Assignment 2)");
-            System.out.println("2) Full execution with log (Assignment 3)");
-            System.out.println("0) Exit");
-            System.out.println("==============================");
-            System.out.print("> ");
-            String mainOption = scanner.nextLine().trim();
+            // --- Select mode ---
+            // --- Select mode ---
+            while (true) {
+                System.out.println("\n==============================");
+                System.out.println("Select mode:");
+                System.out.println("1) Interactive execution (Assignment 2)");
+                System.out.println("2) Full execution with log (Assignment 3)");
+                System.out.println("0) Exit");
+                System.out.println("==============================");
+                System.out.print("> ");
+                String mainOption = scanner.nextLine().trim();
 
-            if (mainOption.equals("0")) {
-                System.out.println("Exiting...");
-                break;
-            }
+                if (mainOption.equals("0")) {
+                    System.out.println("Exiting...");
+                    break;
+                }
 
-            // --- Select program ---
-            System.out.println("\nSelect program to run:");
-            examples.keySet().forEach(k -> System.out.println(k + ") " + descriptions.get(k)));
-            System.out.print("> ");
-            String programOption = scanner.nextLine().trim();
+                // --- Get all programs from ExamplePrograms ---
+                List<ExamplePrograms.ProgramExample> programs = ExamplePrograms.getPrograms();
 
-            if (!examples.containsKey(programOption)) {
-                System.out.println("Invalid choice. Try again.");
-                continue;
-            }
+                // --- Display programs with descriptions ---
+                System.out.println("\nSelect program to run:");
+                for (int i = 0; i < programs.size(); i++) {
+                    System.out.println((i + 1) + ") " + programs.get(i).getDescription());
+                }
+                System.out.print("> ");
 
-            Statement program = examples.get(programOption).get(); // fresh instance
-            String logFilePath;
-
-            System.out.print("Enter log file path (e.g., log.txt): ");
-            logFilePath = scanner.nextLine().trim();
-
-            ProgramState programState = new ProgramState(
-                    new StackExecutionStack(),
-                    new SymbolTable(),
-                    new ListOut(),
-                    new FileTable(),
-                    new Heap(),
-                    program
-
-            );
-            programState.executionStack().push(program);
-
-            Repository repo = new Repository(logFilePath);
-            repo.addProgram(programState);
-            Controller controller = new Controller(repo);
-
-
-            if (mainOption.equals("1")) {
-                System.out.print("Display Program State after each step? [y/n]: ");
-                boolean displayState = scanner.nextLine().trim().equalsIgnoreCase("y");
+                int programIndex;
                 try {
-                    repo.logPrgStateExec(programState); // initial log
-
-                    while (!programState.executionStack().isEmpty()) {
-                        controller.oneStepForAllPrg(repo.getProgramList());
-
-                        if (displayState) {
-                            System.out.println("ExeStack=" + programState.executionStack());
-                            System.out.println("SymTable=" + programState.symbolTable());
-                            System.out.println("Out=" + programState.out());
-                            System.out.println("FileTable=" + programState.fileTable().getContent());
-                            System.out.println();
-                        }
+                    programIndex = Integer.parseInt(scanner.nextLine().trim()) - 1;
+                    if (programIndex < 0 || programIndex >= programs.size()) {
+                        System.out.println("Invalid choice. Try again.");
+                        continue;
                     }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Enter a number.");
+                    continue;
+                }
 
-                    System.out.println("Final Output: " + programState.out());
-                } catch (MyException | InterruptedException e) {
-                    System.out.println("Error: " + e.getMessage());
+                // --- Get the selected program ---
+                Statement program = programs.get(programIndex).getProgram();
+
+                // --- Show description before running ---
+                System.out.println("\nRunning program: " + programs.get(programIndex).getDescription() + "\n");
+
+                // --- Ask for log file path ---
+                System.out.print("Enter log file path (e.g., log.txt): ");
+                String logFilePath = scanner.nextLine().trim();
+
+                // --- Initialize ProgramState ---
+                ProgramState programState = new ProgramState(
+                        new StackExecutionStack(),
+                        new SymbolTable(),
+                        new ListOut(),
+                        new FileTable(),
+                        new Heap(),
+                        program
+                );
+                programState.executionStack().push(program);
+
+                Repository repo = new Repository(logFilePath);
+                repo.addProgram(programState);
+                Controller controller = new Controller(repo);
+
+                // --- Run program ---
+                if (mainOption.equals("1")) {
+                    System.out.print("Display Program State after each step? [y/n]: ");
+                    boolean displayState = scanner.nextLine().trim().equalsIgnoreCase("y");
+                    try {
+                        repo.logPrgStateExec(programState); // initial log
+
+                        while (!programState.executionStack().isEmpty()) {
+                            controller.oneStepForAllPrg(repo.getProgramList());
+
+                            if (displayState) {
+                                System.out.println("ExeStack=" + programState.executionStack());
+                                System.out.println("SymTable=" + programState.symbolTable());
+                                System.out.println("Out=" + programState.out());
+                                System.out.println("FileTable=" + programState.fileTable().getContent());
+                                System.out.println();
+                            }
+                        }
+
+                        System.out.println("Final Output: " + programState.out());
+                    } catch (MyException | InterruptedException e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                } else if (mainOption.equals("2")) {
+                    try {
+                        controller.allStep();
+                        System.out.println("Execution finished. Check the log file at: " + logFilePath);
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                } else {
+                    System.out.println("Invalid option. Try again.");
                 }
-            } else if (mainOption.equals("2")) {
-                try {
-                    controller.allStep();
-                    System.out.println("Execution finished. Check the log file at: " + logFilePath);
-                } catch (Exception e) {
-                    System.out.println("Error: " + e.getMessage());
-                }
-            } else {
-                System.out.println("Invalid option. Try again.");
             }
         }
     }
-}

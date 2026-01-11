@@ -76,8 +76,56 @@ public record BinaryExpression(String operator, Expression left, Expression righ
 
         return new BooleanValue(result);
     }
+
     public Expression deepCopy()
     {
         return new BinaryExpression(this.operator, this.left, this.right);
     }
+
+    @Override
+    public Type typeCheck(IMap<String, Type> typeEnv) throws MyException {
+        Type typ1 = left.typeCheck(typeEnv);
+        Type typ2 = right.typeCheck(typeEnv);
+
+        switch (operator) {
+
+            // logical operators
+            case "&&", "||" -> {
+                if (typ1.equals(new BooleanType())) {
+                    if (typ2.equals(new BooleanType())) {
+                        return new BooleanType();
+                    } else {
+                        throw new MyException("Second operand is not a boolean");
+                    }
+                } else {
+                    throw new MyException("First operand is not a boolean");
+                }
+            }
+
+            // relational operators
+            case "<", ">", "<=", ">=" -> {
+                if (typ1.equals(new IntegerType())) {
+                    if (typ2.equals(new IntegerType())) {
+                        return new BooleanType();
+                    } else {
+                        throw new MyException("Second operand is not an integer");
+                    }
+                } else {
+                    throw new MyException("First operand is not an integer");
+                }
+            }
+
+            // equality operators
+            case "==", "!=" -> {
+                if (typ1.equals(typ2)) {
+                    return new BooleanType();
+                } else {
+                    throw new MyException("Operands must have the same type for equality");
+                }
+            }
+
+            default -> throw new MyException("Unknown binary operator: " + operator);
+        }
+    }
+
 }

@@ -1,26 +1,21 @@
 package gui;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import model.statement.Statement;
+import view.ExamplePrograms;
 
-public class MainApp extends Application {
+import java.util.List;
 
-    @Override
-    public void start(Stage stage) {
-        Label label = new Label("JavaFX is working ✅");
-        StackPane root = new StackPane(label);
-
-        Scene scene = new Scene(root, 400, 200);
-
-        stage.setTitle("JavaFX Test");
-        stage.setScene(scene);
-        stage.show();
-    }
-
+public class MainApp {
     public static void main(String[] args) {
-        launch(args);
+
+        // Load all examples
+        List<ExamplePrograms.ProgramExample> examples = ExamplePrograms.getPrograms();
+
+        // Extract the Statements and descriptions for ProgramSelectionWindow
+        ProgramSelectionWindow.setPrograms(examples);
+
+        // Launch the selection window
+        Application.launch(ProgramSelectionWindow.class, args);
     }
 }

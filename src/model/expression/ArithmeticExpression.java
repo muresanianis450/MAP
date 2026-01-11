@@ -42,4 +42,22 @@ public record ArithmeticExpression(String operator, Expression left, Expression 
     public Expression deepCopy(){
         return new ArithmeticExpression(this.operator, this.left, this.right);
     }
+    @Override
+    public Type typeCheck(IMap<String, Type> typeEnv) throws MyException {
+        // Type-check left and right expressions
+        Type leftType = left.typeCheck(typeEnv);
+        Type rightType = right.typeCheck(typeEnv);
+
+        // Both must be integers
+        if (!(leftType instanceof IntegerType))
+            throw new MyException("Left operand of " + operator + " is not an integer");
+
+        if (!(rightType instanceof IntegerType))
+            throw new MyException("Right operand of " + operator + " is not an integer");
+
+        // Arithmetic expressions always return integer
+        return new IntegerType();
+    }
+
+
 }

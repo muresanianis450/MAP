@@ -19,4 +19,8 @@ public class ListOut<T> implements IList<T> {
     public String toString(){
         return outputList.toString();
     }
+
+    public List<T> getInternalList(){
+        return outputList;
+    }
 }

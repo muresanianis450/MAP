@@ -12,6 +12,7 @@ import model.value.IntegerValue;
 import model.value.Value;
 
 import java.net.Inet4Address;
+import model.type.Type;
 
 public class RelationalExpression implements Expression {
     private final Expression left;
@@ -60,6 +61,28 @@ public class RelationalExpression implements Expression {
     @Override
     public Expression deepCopy() {
         return new RelationalExpression(left.deepCopy(), right.deepCopy(), operator);
+    }
+
+    @Override
+    public Type typeCheck(IMap<String, Type> typeEnv) throws MyException {
+        Type leftType = left.typeCheck(typeEnv);
+        Type rightType = right.typeCheck(typeEnv);
+
+        switch (operator) {
+            case "<", ">", "<=", ">=" -> {
+                if (!(leftType instanceof IntegerType))
+                    throw new MyException("Left operand of " + operator + " is not an integer.");
+                if (!(rightType instanceof IntegerType))
+                    throw new MyException("Right operand of " + operator + " is not an integer.");
+                return new BooleanType(); // relational expressions always return boolean
+            }
+            case "==", "!=" -> {
+                if (!leftType.equals(rightType))
+                    throw new MyException("Operands of " + operator + " must have the same type.");
+                return new BooleanType();
+            }
+            default -> throw new MyException("Unknown relational operator: " + operator);
+        }
     }
 
 }
