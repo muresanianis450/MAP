@@ -10,7 +10,9 @@ import model.value.Value;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
+import model.ADT.Map.IMap;
+import model.type.Type;
+import model.type.StringType;
 public class OpenReadFile implements Statement {
     private final Expression expression;
 
@@ -49,4 +51,16 @@ public class OpenReadFile implements Statement {
     public Statement deepCopy() {
         return new OpenReadFile(this.expression);
     }
+    @Override
+    public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+
+        Type expType = expression.typeCheck(typeEnv);
+
+        if (!expType.equals(new StringType()))
+            throw new MyException("OpenReadFile: expression is not of type string");
+
+        return typeEnv;
+    }
+
+
 }

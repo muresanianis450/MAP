@@ -1,4 +1,5 @@
 package model.ADT.Map;
+import exceptions.MyException;
 import model.type.Type;
 import model.value.Value;
 
@@ -6,37 +7,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SymbolTable<K,V> implements IMap<K,V> {
-
-    private final Map<String, Value> map = new HashMap<>();
-
-    @Override
-    public boolean isDefined(String variableName){ return map.containsKey(variableName); }
+public class SymbolTable<K, V> implements IMap<K, V> {
+    private final Map<K, V> map = new HashMap<>();
 
     @Override
-    public Type getType(String variableName){
-        return map.get(variableName).getType();
+    public boolean isDefined(K key) {
+        return map.containsKey(key);
     }
 
     @Override
-    /*in order to declare a new variable we must put a tuple of <variable_name, default value>
-     we call the default value for out type, so it could be 0, NULL or however we define the
-    default value to be.
-    */
-    public void declareVariable(String variableName, Value value){
-        map.put(variableName,value);
-
+    public V lookup(K key) throws MyException {
+        if (!map.containsKey(key))
+            throw new MyException("Key not defined: " + key);
+        return map.get(key);
     }
 
     @Override
-    public void update(String variableName, Value value){
-        map.put(variableName, value);
+    public void add(K key, V value) {
+        map.put(key, value);
     }
 
+    @Override
+    public void update(K key, V value) {
+        map.put(key, value);
+    }
 
     @Override
-    public Value getValue(String variableName){
-        return map.get(variableName);
+    public Map<K, V> getContent() {
+        return new HashMap<>(map);
+    }
+
+    @Override
+    public IMap<K, V> deepCopy() {
+        SymbolTable<K, V> copy = new SymbolTable<>();
+        copy.map.putAll(this.map);
+        return copy;
     }
 
     @Override
@@ -44,19 +49,5 @@ public class SymbolTable<K,V> implements IMap<K,V> {
         return map.toString();
     }
 
-    @Override
-    public Map<String, Value> getContent() {
-        return new HashMap<>(map); // return a copy for safety
-    }
-
-    @Override
-    public IMap<String, Value> deepCopy() {
-        IMap<String, Value> newMap = new SymbolTable();
-        for (String key : map.keySet()) {
-            newMap.declareVariable(key, map.get(key).deepCopy()); // deep copy of the Value
-        }
-        return newMap;
-    }
-
-
 }
+

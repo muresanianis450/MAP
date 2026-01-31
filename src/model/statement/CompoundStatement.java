@@ -1,5 +1,8 @@
 package model.statement;
+import exceptions.MyException;
+import model.ADT.Map.IMap;
 import model.state.ProgramState;
+import model.type.Type;
 
 //Represents two statements executed in sequence
 public class CompoundStatement implements Statement{
@@ -25,5 +28,10 @@ public class CompoundStatement implements Statement{
     @Override
     public Statement deepCopy(){
         return new CompoundStatement(first.deepCopy(), second.deepCopy());
+    }
+
+    @Override
+    public IMap <String,Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+        return second.typeCheck(first.typeCheck(typeEnv));
     }
 }

@@ -24,7 +24,7 @@ public class GUIController {
                 .collect(Collectors.toList());
     }
 
-    // ✅ REQUIRED NAME
+
     public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException {
 
         prgList.forEach(prg -> {

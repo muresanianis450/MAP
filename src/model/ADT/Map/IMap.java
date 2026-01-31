@@ -1,23 +1,22 @@
 package model.ADT.Map;
 
+import exceptions.MyException;
 import model.type.Type;
 import model.value.Value;
 
 import java.util.Map;
 
-public interface IMap<K,V> {
+public interface IMap<K, V> {
+    boolean isDefined(K key);
 
-    boolean isDefined(String variableName);
+    V lookup(K key) throws MyException;     // or return null
+    void add(K key, V value);
+    void update(K key, V value);
 
-    Type getType(String variableName);
+    Map<K, V> getContent();
 
-    void declareVariable(String variableName, Value value);
+    IMap<K, V> deepCopy();
 
-    void update(String variableName, Value value);
 
-    Value getValue(String variableName);
-
-    Map<String, Value> getContent();
-
-    IMap<String,Value> deepCopy();
 }
+

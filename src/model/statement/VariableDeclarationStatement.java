@@ -1,6 +1,10 @@
 package model.statement;
 import model.state.ProgramState;
 import model.type.Type;
+import model.ADT.Map.IMap;
+import model.type.Type;
+import exceptions.MyException;
+
 
 //Declares a variable in the symbol table
 public class VariableDeclarationStatement implements Statement{
@@ -18,7 +22,7 @@ public class VariableDeclarationStatement implements Statement{
             throw new RuntimeException("Variable already declared: " + variableName);
         }
         //state.symbolTable().declareVariable(variableName, type); BEFORE THE CHANGE
-        state.symbolTable().declareVariable(variableName, type.defaultValue());
+        state.symbolTable().add(variableName, type.defaultValue());
         //return state;
         return null ;     }
 
@@ -31,6 +35,17 @@ public class VariableDeclarationStatement implements Statement{
     public Statement deepCopy() {
         return new VariableDeclarationStatement(variableName, type);
     }
+
+    @Override
+    public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+
+        if (typeEnv.isDefined(variableName))
+            throw new MyException("Variable already declared: " + variableName);
+
+        typeEnv.add(variableName, type);
+        return typeEnv;
+    }
+
 }
 
 

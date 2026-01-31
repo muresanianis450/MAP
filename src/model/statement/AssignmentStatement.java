@@ -1,7 +1,9 @@
 package model.statement;
 
+import model.ADT.Map.IMap;
 import model.expression.Expression;
 import model.state.ProgramState;
+import model.type.Type;
 import model.value.Value;
 import exceptions.MyException;
 
@@ -32,5 +34,20 @@ public class AssignmentStatement implements Statement {
     @Override
     public Statement deepCopy() {
         return new AssignmentStatement(variableName, expression.deepCopy());
+    }
+
+    @Override
+    public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+
+        if (!typeEnv.isDefined(variableName))
+            throw new MyException("Assignment: variable not declared");
+
+        Type varType = typeEnv.lookup(variableName);
+        Type expType = expression.typeCheck(typeEnv);
+
+        if (!varType.equals(expType))
+            throw new MyException("Assignment: right hand side and left hand side have different types");
+
+        return typeEnv;
     }
 }

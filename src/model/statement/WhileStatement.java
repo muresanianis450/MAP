@@ -1,11 +1,13 @@
 package model.statement;
 
 
+import model.type.BooleanType;
 import exceptions.MyException;
 import model.ADT.Heap.IHeap;
 import model.ADT.Map.IMap;
 import model.expression.Expression;
 import model.state.ProgramState;
+import model.type.Type;
 import model.value.BooleanValue;
 import model.value.Value;
 
@@ -51,6 +53,18 @@ public class WhileStatement implements Statement {
     @Override
     public Statement deepCopy(){
         return new WhileStatement(condition.deepCopy(), body.deepCopy());
+    }
+
+    @Override
+    public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+        Type condType = condition.typeCheck(typeEnv);
+
+        if (!condType.equals(new BooleanType()))
+            throw new MyException("WHILE condition is not boolean");
+
+        body.typeCheck(typeEnv.deepCopy());
+
+        return typeEnv;
     }
 }
 

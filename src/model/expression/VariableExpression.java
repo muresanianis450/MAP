@@ -12,7 +12,7 @@ public record VariableExpression(String variableName) implements Expression {
         if(!symTable.isDefined(variableName)){
             throw new RuntimeException("Variable not defined<Variable_Execution_evaluate>");
         }
-        return symTable.getValue(variableName);
+        return symTable.lookup(variableName);
     }
     @Override
     public Expression deepCopy(){
@@ -24,7 +24,7 @@ public record VariableExpression(String variableName) implements Expression {
         if (!typeEnv.isDefined(variableName)) {
             throw new MyException("Variable " + variableName + " is not defined in the type environment");
         }
-        return typeEnv.getType(variableName);
+        return typeEnv.lookup(variableName);
     }
 
 

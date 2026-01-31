@@ -27,8 +27,7 @@
             Scanner scanner = new Scanner(System.in);
 
 
-            // --- Select mode ---
-            // --- Select mode ---
+            // Select mode
             while (true) {
                 System.out.println("\n==============================");
                 System.out.println("Select mode:");
@@ -44,10 +43,10 @@
                     break;
                 }
 
-                // --- Get all programs from ExamplePrograms ---
+                // Get all programs from ExamplePrograms
                 List<ExamplePrograms.ProgramExample> programs = ExamplePrograms.getPrograms();
 
-                // --- Display programs with descriptions ---
+                //Display programs with descriptions
                 System.out.println("\nSelect program to run:");
                 for (int i = 0; i < programs.size(); i++) {
                     System.out.println((i + 1) + ") " + programs.get(i).getDescription());
@@ -66,17 +65,16 @@
                     continue;
                 }
 
-                // --- Get the selected program ---
+
                 Statement program = programs.get(programIndex).getProgram();
 
-                // --- Show description before running ---
+
                 System.out.println("\nRunning program: " + programs.get(programIndex).getDescription() + "\n");
 
-                // --- Ask for log file path ---
                 System.out.print("Enter log file path (e.g., log.txt): ");
                 String logFilePath = scanner.nextLine().trim();
 
-                // --- Initialize ProgramState ---
+                //Initialize ProgramState
                 ProgramState programState = new ProgramState(
                         new StackExecutionStack(),
                         new SymbolTable(),

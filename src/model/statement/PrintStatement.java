@@ -1,7 +1,9 @@
 package model.statement;
+import model.ADT.Map.IMap;
 import model.expression.Expression;
 import model.state.ProgramState;
 import exceptions.MyException;
+import model.type.Type;
 
 public class PrintStatement implements Statement {
     private final Expression expression;
@@ -28,5 +30,11 @@ public class PrintStatement implements Statement {
     @Override
     public Statement deepCopy() {
         return new PrintStatement(expression.deepCopy());
+    }
+
+    @Override
+    public IMap <String,Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+        expression.typeCheck(typeEnv);
+        return typeEnv;
     }
 }

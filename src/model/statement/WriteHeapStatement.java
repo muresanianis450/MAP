@@ -8,7 +8,7 @@ import model.state.ProgramState;
 import model.type.RefType;
 import model.value.RefValue;
 import model.value.Value;
-
+import model.type.Type;
 public class WriteHeapStatement implements Statement{
 
     private final String varName;
@@ -29,7 +29,7 @@ public class WriteHeapStatement implements Statement{
             throw new MyException("Variable " + varName + " is not defined");
         }
 
-        Value varValue = symTable.getValue(varName);
+        Value varValue = symTable.lookup(varName);
 
         //check if variable is of RefType
 
@@ -65,6 +65,28 @@ public class WriteHeapStatement implements Statement{
     public Statement deepCopy() {
         return new WriteHeapStatement(varName, expression.deepCopy());
     }
+
+    @Override
+    public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+
+        if (!typeEnv.isDefined(varName))
+            throw new MyException("WriteHeap: variable not declared");
+
+        Type varType = typeEnv.lookup(varName);
+
+        if (!(varType instanceof RefType))
+            throw new MyException("WriteHeap: variable is not RefType");
+
+        Type expType = expression.typeCheck(typeEnv);
+        Type innerType = ((RefType) varType).getInner();
+
+        if (!expType.equals(innerType))
+            throw new MyException("WriteHeap: type mismatch");
+
+        return typeEnv;
+    }
+
+
 }
 
 

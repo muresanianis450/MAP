@@ -9,6 +9,10 @@ import model.type.RefType;
 import model.type.Type;
 import model.value.RefValue;
 import model.value.Value;
+import model.ADT.Map.IMap;
+import model.type.Type;
+import model.type.RefType;
+
 
 public class NewStatement implements Statement {
 
@@ -30,7 +34,7 @@ public class NewStatement implements Statement {
             throw new MyException("Variable " + varName + " is not defined");
         }
 
-        Value varValue = symTable.getValue(varName);
+        Value varValue = symTable.lookup(varName);
 
         //2. Check if variable is of RefType
         if (!(varValue.getType() instanceof RefType)) {
@@ -66,5 +70,25 @@ public class NewStatement implements Statement {
         @Override
     public Statement deepCopy() {
             return new NewStatement(varName, expression.deepCopy());
+    }
+
+    @Override
+    public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+
+        if (!typeEnv.isDefined(varName))
+            throw new MyException("NEW: variable not declared");
+
+        Type varType = typeEnv.lookup(varName);
+
+        if (!(varType instanceof RefType))
+            throw new MyException("NEW: variable is not of RefType");
+
+        Type expType = expression.typeCheck(typeEnv);
+        Type innerType = ((RefType) varType).getInner();
+
+        if (!expType.equals(innerType))
+            throw new MyException("NEW: right hand side and left hand side have different types");
+
+        return typeEnv;
     }
     }

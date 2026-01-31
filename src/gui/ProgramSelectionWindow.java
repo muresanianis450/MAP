@@ -50,8 +50,25 @@ public class ProgramSelectionWindow extends Application {
             int selectedIndex = programListView.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {
                 ExamplePrograms.ProgramExample selectedExample = programs.get(selectedIndex);
-                Statement selectedProgram = selectedExample.getProgram();
 
+                Statement selectedProgram = selectedExample.getProgram();
+                //TypeCheck before creating the MainWindow
+                try{
+                    selectedProgram.typeCheck(new model.ADT.Map.SymbolTable<String,model.type.Type>());
+                    //if typeCheck passes, give a confirmation alert
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Type Check Successful");
+                    alert.setHeaderText("Type Check Passed");
+                    alert.setContentText("The selected program passed type checking.");
+                    alert.showAndWait();
+                }catch(exceptions.MyException ex){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Type Check Error");
+                    alert.setHeaderText("Type Check Failed");
+                    alert.setContentText(ex.getMessage());
+                    alert.showAndWait();
+                    return; //stop: do not open MainWindow
+                }
                 // Launch MainWindow
                 MainWindow mainWindow = new MainWindow(selectedProgram);
                 try {

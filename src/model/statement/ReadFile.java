@@ -13,7 +13,8 @@ import model.type.Type;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-
+import model.type.StringType;
+import model.type.IntegerType;
 public class ReadFile implements Statement {
     private final Expression expression;
     private final String variableName;
@@ -40,7 +41,7 @@ public class ReadFile implements Statement {
             throw new MyException("Variable " + variableName + " is not defined!");
         }
 
-        if (!(symTable.getValue(variableName).getType() instanceof IntegerType)) {
+        if (!(symTable.lookup(variableName).getType() instanceof IntegerType)) {
             throw new MyException("Variable " + variableName + " must be of type int!");
         }
 
@@ -72,4 +73,23 @@ public class ReadFile implements Statement {
     public Statement deepCopy() {
         return  new ReadFile(this.expression, this.variableName);
     }
+    @Override
+    public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
+
+        // expression must be string
+        if (!expression.typeCheck(typeEnv).equals(new StringType()))
+            throw new MyException("ReadFile: expression is not of type string");
+
+        // variable must exist
+        if (!typeEnv.isDefined(variableName))
+            throw new MyException("ReadFile: variable not declared");
+
+        // variable must be int
+        if (!typeEnv.lookup(variableName).equals(new IntegerType()))
+            throw new MyException("ReadFile: variable is not of type int");
+
+        return typeEnv;
+    }
+
+
 }
