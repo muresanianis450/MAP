@@ -27,6 +27,8 @@ public class GUIController {
 
     public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException {
 
+        prgList = removeCompletedPrg(prgList);
+
         prgList.forEach(prg -> {
             try {
                 repo.logPrgStateExec(prg);
@@ -47,8 +49,14 @@ public class GUIController {
                 .filter(p -> p != null)
                 .collect(Collectors.toList());
 
+        //add forked programs
         prgList.addAll(newPrgList);
 
+        //remove completed again after stepping
+
+        prgList = removeCompletedPrg(prgList);
+
+        //log AFTER execution
         prgList.forEach(prg -> {
             try {
                 repo.logPrgStateExec(prg);

@@ -270,6 +270,52 @@ public class ExamplePrograms {
                         )
                 )
         ));
+        examples.add(new ProgramExample(
+                "switch(a*10) with cases (b*c) / 10 / default; final Out = {1,2,300}",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("a", new IntegerType()),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("b", new IntegerType()),
+                                new CompoundStatement(
+                                        new VariableDeclarationStatement("c", new IntegerType()),
+                                        new CompoundStatement(
+                                                new AssignmentStatement("a", new ConstantExpression(new IntegerValue(1))),
+                                                new CompoundStatement(
+                                                        new AssignmentStatement("b", new ConstantExpression(new IntegerValue(2))),
+                                                        new CompoundStatement(
+                                                                new AssignmentStatement("c", new ConstantExpression(new IntegerValue(5))),
+                                                                new CompoundStatement(
+                                                                        new SwitchStatement(
+                                                                                new ArithmeticExpression("*",
+                                                                                        new VariableExpression("a"),
+                                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                                ),
+                                                                                new ArithmeticExpression("*",
+                                                                                        new VariableExpression("b"),
+                                                                                        new VariableExpression("c")
+                                                                                ),
+                                                                                new CompoundStatement(
+                                                                                        new PrintStatement(new VariableExpression("a")),
+                                                                                        new PrintStatement(new VariableExpression("b"))
+                                                                                ),
+                                                                                new ConstantExpression(new IntegerValue(10)),
+                                                                                new CompoundStatement(
+                                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(100))),
+                                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(200)))
+                                                                                ),
+                                                                                new PrintStatement(new ConstantExpression(new IntegerValue(300)))
+                                                                        ),
+                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(300)))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+
+
         return examples;
     }
 }
