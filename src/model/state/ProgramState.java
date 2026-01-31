@@ -10,7 +10,7 @@ import model.statement.Statement;
 import model.type.IntegerType;
 import model.value.IntegerValue;
 import model.value.Value;
-
+import model.ADT.LockTable.ILockTable;
 public class ProgramState {
 
     private static int lastId = 0;
@@ -21,12 +21,14 @@ public class ProgramState {
     private final IList<Value> out;
     private final IFileTable fileTable;
     private final int id;
+    private final ILockTable lockTable;
 
     public ProgramState(IStack<Statement> executionStack,
                         IMap<String, Value> symbolTable,
                         IList<Value> out,
                         IFileTable fileTable,
                         IHeap heap,
+                        ILockTable lockTable,
                         Statement originalProgram
                         ) {
 
@@ -34,6 +36,7 @@ public class ProgramState {
         this.symbolTable = symbolTable;
         this.heap = heap;
         this.out = out;
+        this.lockTable = lockTable;
         this.fileTable = fileTable;
         this.id = newId(); //assign unique ID
     }
@@ -68,6 +71,9 @@ public class ProgramState {
         return id;
     }
 
+    public ILockTable lockTable() {
+        return lockTable;
+    }
     public boolean isNotCompleted() {
         return !executionStack.isEmpty();
     }
@@ -90,6 +96,7 @@ public class ProgramState {
                 "\nOut:\n" + out +
                 "\nFileTable:\n" + fileTable +
                 "\nHeap:\n" + heap +
+                "\nLockTable:\n" + lockTable +
                 "\n------------------------------------------------------------\n";
     }
 

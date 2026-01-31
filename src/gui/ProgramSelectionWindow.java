@@ -54,7 +54,7 @@ public class ProgramSelectionWindow extends Application {
 
                 Statement selectedProgram = selectedExample.getProgram();
 
-                
+
                 //TypeCheck before creating the MainWindow
                 try{
                     selectedProgram.typeCheck(new model.ADT.Map.SymbolTable<String,model.type.Type>());

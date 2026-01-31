@@ -5,6 +5,7 @@ import exceptions.MyException;
 import model.ADT.FileTable.IFileTable;
 import model.ADT.Heap.IHeap;
 import model.ADT.List.IList;
+import model.ADT.LockTable.ILockTable;
 import model.ADT.Map.IMap;
 import model.ADT.Stack.IStack;
 import model.state.ProgramState;
@@ -57,8 +58,9 @@ public class MainWindow extends Application {
         IList<Value> out = new model.ADT.List.ListOut<>();
         IHeap heap = new model.ADT.Heap.Heap();
         IFileTable fileTable = new model.ADT.FileTable.FileTable();
+        ILockTable lockTable = new model.ADT.LockTable.LockTable();
 
-        programState = new ProgramState(exeStack, symTableMap, out, fileTable, heap, program);
+        programState = new ProgramState(exeStack, symTableMap, out, fileTable, heap, lockTable, program);
         exeStack.push(program);
 
         repo = new Repository("GUI_LOGFILE.txt");

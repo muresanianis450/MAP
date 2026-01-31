@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import model.ADT.LockTable.ILockTable;
 public class Repository implements IRepository {
 
     private List<ProgramState> programStates;
@@ -57,6 +57,11 @@ public class Repository implements IRepository {
                 logFile.println(entry.getKey() + " -> " + entry.getValue().toString() + "\n");
             }
 
+            logFile.println("LockTable:");
+            Map<Integer, Integer> lockContent = state.lockTable().getContent();
+            for (Map.Entry<Integer, Integer> entry : lockContent.entrySet()) {
+                logFile.println(entry.getKey() + " -> " + entry.getValue());
+            }
 
             logFile.println("------------------------------------------------------------\n");
 

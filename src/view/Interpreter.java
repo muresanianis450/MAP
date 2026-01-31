@@ -6,6 +6,7 @@
     import model.ADT.Heap.Heap;
     import model.ADT.Heap.Heap;
     import model.ADT.List.ListOut;
+    import model.ADT.LockTable.LockTable;
     import model.ADT.Map.SymbolTable;
     import model.ADT.Stack.StackExecutionStack;
     import model.expression.*;
@@ -81,8 +82,10 @@
                         new ListOut(),
                         new FileTable(),
                         new Heap(),
+                        new LockTable(),
                         program
                 );
+
                 programState.executionStack().push(program);
 
                 Repository repo = new Repository(logFilePath);

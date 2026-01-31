@@ -33,14 +33,15 @@ public class ForkStatement implements Statement {
         for (var entry : parentState.symbolTable().getContent().entrySet()) {
             newSymbolTable.add(entry.getKey(), entry.getValue().deepCopy());
         }
-        
+
         //heap, Out, FileTable are shared
         return new ProgramState(
                 newStack,
                 newSymbolTable,
                 parentState.out(),        // Shared output
                 parentState.fileTable(),  // Shared file table
-                parentState.heap(),       // Shared heap
+                parentState.heap(),
+                parentState.lockTable(),// Shared heap
                 forkedStatement           // Original program pushed on stack
         );
 
