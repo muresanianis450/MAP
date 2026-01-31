@@ -47,7 +47,7 @@ public class IfStatement implements Statement {
 
     @Override
     public Statement deepCopy() {
-        return new IfStatement(condition.deepCopy(), thenStatement.deepCopy(), elseStatement);
+        return new IfStatement(condition.deepCopy(), thenStatement.deepCopy(), elseStatement.deepCopy());
     }
 
     @Override

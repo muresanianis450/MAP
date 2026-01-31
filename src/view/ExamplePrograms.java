@@ -253,7 +253,23 @@ public class ExamplePrograms {
                         )
                 )
         ));
-
+        examples.add(new ProgramExample(
+                "int x; x=2; switch(x) case 1: print 111 case 2: print 222 default: print 333",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("x", new IntegerType()),
+                        new CompoundStatement(
+                                new AssignmentStatement("x", new ConstantExpression(new IntegerValue(2))),
+                                new SwitchStatement(
+                                        new VariableExpression("x"),
+                                        new ConstantExpression(new IntegerValue(1)),
+                                        new PrintStatement(new ConstantExpression(new IntegerValue(111))),
+                                        new ConstantExpression(new IntegerValue(2)),
+                                        new PrintStatement(new ConstantExpression(new IntegerValue(222))),
+                                        new PrintStatement(new ConstantExpression(new IntegerValue(333)))
+                                )
+                        )
+                )
+        ));
         return examples;
     }
 }

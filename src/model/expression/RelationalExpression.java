@@ -29,29 +29,33 @@ public class RelationalExpression implements Expression {
     @Override
     public Value evaluate(IMap<String, Value> symTable, IHeap heap) throws MyException {
         Value v1 = left.evaluate(symTable, heap);
-        Value v2 = right.evaluate(symTable,heap);
+        Value v2 = right.evaluate(symTable, heap);
 
-        if(!(v1.getType() instanceof  IntegerType )||
-                !(v2.getType() instanceof IntegerType) )
-        {
-            throw new MyException("Relational operands must be integeres!");
-
+        // == and != should work for any types (as long as Value.equals is correct)
+        if (operator.equals("==")) {
+            return new BooleanValue(v1.equals(v2));
         }
+        if (operator.equals("!=")) {
+            return new BooleanValue(!v1.equals(v2));
+        }
+
+        // the other relational ops require integers
+        if (!(v1.getType() instanceof IntegerType) || !(v2.getType() instanceof IntegerType)) {
+            throw new MyException("Relational operands must be integers!");
+        }
+
         int n1 = ((IntegerValue) v1).getValue();
-        int n2 =  ((IntegerValue) v2).getValue();
+        int n2 = ((IntegerValue) v2).getValue();
 
-
-
-        return switch(operator){
+        return switch (operator) {
             case "<" -> new BooleanValue(n1 < n2);
             case ">" -> new BooleanValue(n1 > n2);
-            case "==" -> new BooleanValue(v1.equals(v2));
-            case "!=" -> new BooleanValue(!(v1.equals(v2)));
             case "<=" -> new BooleanValue(n1 <= n2);
             case ">=" -> new BooleanValue(n1 >= n2);
-            default -> throw new MyException("Invalid relational operand");
+            default -> throw new MyException("Invalid relational operator: " + operator);
         };
     }
+
 
     @Override
     public String toString(){
