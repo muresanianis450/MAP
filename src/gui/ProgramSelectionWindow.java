@@ -11,7 +11,8 @@ import javafx.stage.Stage;
 import model.statement.Statement;
 import view.ExamplePrograms;
 
-import java.util.List;
+import java.util.List;import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class ProgramSelectionWindow extends Application {
 
@@ -52,6 +53,8 @@ public class ProgramSelectionWindow extends Application {
                 ExamplePrograms.ProgramExample selectedExample = programs.get(selectedIndex);
 
                 Statement selectedProgram = selectedExample.getProgram();
+
+                
                 //TypeCheck before creating the MainWindow
                 try{
                     selectedProgram.typeCheck(new model.ADT.Map.SymbolTable<String,model.type.Type>());
@@ -61,13 +64,17 @@ public class ProgramSelectionWindow extends Application {
                     alert.setHeaderText("Type Check Passed");
                     alert.setContentText("The selected program passed type checking.");
                     alert.showAndWait();
-                }catch(exceptions.MyException ex){
+                }catch(Exception  ex){
+                    StringWriter sw = new StringWriter();
+                    ex.printStackTrace(new PrintWriter(sw));
+                    gui.DebugUtil.log("TYPECHECK FAILED:\n" + sw);
+
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Type Check Error");
                     alert.setHeaderText("Type Check Failed");
                     alert.setContentText(ex.getMessage());
                     alert.showAndWait();
-                    return; //stop: do not open MainWindow
+                    return;
                 }
                 // Launch MainWindow
                 MainWindow mainWindow = new MainWindow(selectedProgram);

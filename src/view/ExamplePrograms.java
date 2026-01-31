@@ -314,6 +314,39 @@ public class ExamplePrograms {
                         )
                 )
         ));
+        examples.add(new ProgramExample(
+                "ref int a; new(a,20); (for(v=0;v<3;v=v+1) fork(print(v); v=v*rh(a))); print(rh(a)) ; final Out = {0,1,2,20}",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("a", new RefType(new IntegerType())),
+                        new CompoundStatement(
+                                new NewStatement("a", new ConstantExpression(new IntegerValue(20))),
+                                new CompoundStatement(
+                                        new ForStatement(
+                                                "v",
+                                                new ConstantExpression(new IntegerValue(0)),
+                                                new ConstantExpression(new IntegerValue(3)),
+                                                new ArithmeticExpression("+",
+                                                        new VariableExpression("v"),
+                                                        new ConstantExpression(new IntegerValue(1))
+                                                ),
+                                                new ForkStatement(
+                                                        new CompoundStatement(
+                                                                new PrintStatement(new VariableExpression("v")),
+                                                                new AssignmentStatement(
+                                                                        "v",
+                                                                        new ArithmeticExpression("*",
+                                                                                new VariableExpression("v"),
+                                                                                new ReadHeapExpression(new VariableExpression("a"))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        ),
+                                        new PrintStatement(new ReadHeapExpression(new VariableExpression("a")))
+                                )
+                        )
+                )
+        ));
 
 
         return examples;

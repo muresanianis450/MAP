@@ -25,19 +25,19 @@ public class GUIController {
     }
 
 
-    public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException {
+    public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException, MyException {
 
-        prgList = removeCompletedPrg(prgList);
+        // keep only runnable programs for stepping
+        List<ProgramState> runnable = removeCompletedPrg(prgList);
 
-        prgList.forEach(prg -> {
-            try {
-                repo.logPrgStateExec(prg);
-            } catch (MyException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        if (runnable.isEmpty()) {
+            // no more steps possible
+            throw new MyException("Program finished!");
+        }
 
-        List<Callable<ProgramState>> callList = prgList.stream()
+
+
+        List<Callable<ProgramState>> callList = runnable.stream()
                 .map(p -> (Callable<ProgramState>) p::oneStep)
                 .collect(Collectors.toList());
 
@@ -49,24 +49,23 @@ public class GUIController {
                 .filter(p -> p != null)
                 .collect(Collectors.toList());
 
-        //add forked programs
+        // add forked programs to the ORIGINAL list
         prgList.addAll(newPrgList);
 
-        //remove completed again after stepping
+        // LOG once per GUI click (BEFORE step is enough; AFTER is optional)
+        for (ProgramState prg : runnable) {
+            repo.logPrgStateExec(prg);
+        }
 
-        prgList = removeCompletedPrg(prgList);
+        // DO NOT remove completed programs here for GUI display purposes
+        // (otherwise you lose the final output/state)
 
-        //log AFTER execution
-        prgList.forEach(prg -> {
-            try {
-                repo.logPrgStateExec(prg);
-            } catch (MyException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        // Optional: log AFTER (but it doubles file size)
+        // for (ProgramState prg : prgList) repo.logPrgStateExec(prg);
 
         repo.setProgramList(prgList);
     }
+
 
     public void shutdownExecutor() {
         executor.shutdownNow();

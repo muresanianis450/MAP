@@ -61,7 +61,7 @@ public class MainWindow extends Application {
         programState = new ProgramState(exeStack, symTableMap, out, fileTable, heap, program);
         exeStack.push(program);
 
-        repo = new Repository("log.txt");
+        repo = new Repository("GUI_LOGFILE.txt");
         repo.addProgram(programState);
         controller = new GUIController(repo);
 
@@ -205,12 +205,16 @@ public class MainWindow extends Application {
         try {
             controller.oneStepForAllPrg(repo.getProgramList());
             updateAllViews();
+        } catch (MyException e) {
+            // program finished
+            runOneStepButton.setDisable(true);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, e.getMessage());
+            alert.showAndWait();
         } catch (InterruptedException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.showAndWait();
         } catch (Exception e) {
-            // Only show alert if actually thrown
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.showAndWait();
         }
