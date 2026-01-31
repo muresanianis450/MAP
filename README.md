@@ -194,3 +194,19 @@ while (v > 0)
     v = v - 1;
 print(v);
 ```
+
+
+---
+
+## Changes added on 31.01.2026🔨
+
+# 1. Switch Statement Added
+
+### How it works? 🔍
+
+```java
+switch(exp)
+(case exp1: stmt1)
+(case exp2: stmt2)
+(default: stmt3)
+```
