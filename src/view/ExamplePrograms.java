@@ -607,6 +607,197 @@ public class ExamplePrograms {
                 )
         ));
 
+        examples.add(new ProgramExample(
+                "Ref int v1; Ref int v2; int x; int q; " +
+                        "new(v1,20); new(v2,30); newLock(x); " +
+                        "fork(fork(lock(x); wh(v1,rh(v1)-1); unlock(x)); lock(x); wh(v1,rh(v1)*10); unlock(x)); " +
+                        "newLock(q); " +
+                        "fork(fork(lock(q); wh(v2,rh(v2)+5); unlock(q)); lock(q); wh(v2,rh(v2)*10); unlock(q)); " +
+                        "nop;nop;nop;nop; " +
+                        "lock(x); print(rh(v1)); unlock(x); " +
+                        "lock(q); print(rh(v2)); unlock(q); " +
+                        "Final Out = {190 or 199, 350 or 305}",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v1", new RefType(new IntegerType())),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("v2", new RefType(new IntegerType())),
+                                new CompoundStatement(
+                                        new VariableDeclarationStatement("x", new IntegerType()),
+                                        new CompoundStatement(
+                                                new VariableDeclarationStatement("q", new IntegerType()),
+                                                new CompoundStatement(
+                                                        new NewStatement("v1", new ConstantExpression(new IntegerValue(20))),
+                                                        new CompoundStatement(
+                                                                new NewStatement("v2", new ConstantExpression(new IntegerValue(30))),
+                                                                new CompoundStatement(
+                                                                        new NewLockStatement("x"),
+                                                                        new CompoundStatement(
+                                                                                new ForkStatement(
+                                                                                        new CompoundStatement(
+                                                                                                new ForkStatement(
+                                                                                                        new CompoundStatement(
+                                                                                                                new LockStatement("x"),
+                                                                                                                new CompoundStatement(
+                                                                                                                        new WriteHeapStatement(
+                                                                                                                                "v1",
+                                                                                                                                new ArithmeticExpression("-",
+                                                                                                                                        new ReadHeapExpression(new VariableExpression("v1")),
+                                                                                                                                        new ConstantExpression(new IntegerValue(1))
+                                                                                                                                )
+                                                                                                                        ),
+                                                                                                                        new UnlockStatement("x")
+                                                                                                                )
+                                                                                                        )
+                                                                                                ),
+                                                                                                new CompoundStatement(
+                                                                                                        new LockStatement("x"),
+                                                                                                        new CompoundStatement(
+                                                                                                                new WriteHeapStatement(
+                                                                                                                        "v1",
+                                                                                                                        new ArithmeticExpression("*",
+                                                                                                                                new ReadHeapExpression(new VariableExpression("v1")),
+                                                                                                                                new ConstantExpression(new IntegerValue(10))
+                                                                                                                        )
+                                                                                                                ),
+                                                                                                                new UnlockStatement("x")
+                                                                                                        )
+                                                                                                )
+                                                                                        )
+                                                                                ),
+                                                                                new CompoundStatement(
+                                                                                        new NewLockStatement("q"),
+                                                                                        new CompoundStatement(
+                                                                                                new ForkStatement(
+                                                                                                        new CompoundStatement(
+                                                                                                                new ForkStatement(
+                                                                                                                        new CompoundStatement(
+                                                                                                                                new LockStatement("q"),
+                                                                                                                                new CompoundStatement(
+                                                                                                                                        new WriteHeapStatement(
+                                                                                                                                                "v2",
+                                                                                                                                                new ArithmeticExpression("+",
+                                                                                                                                                        new ReadHeapExpression(new VariableExpression("v2")),
+                                                                                                                                                        new ConstantExpression(new IntegerValue(5))
+                                                                                                                                                )
+                                                                                                                                        ),
+                                                                                                                                        new UnlockStatement("q")
+                                                                                                                                )
+                                                                                                                        )
+                                                                                                                ),
+                                                                                                                new CompoundStatement(
+                                                                                                                        new LockStatement("q"),
+                                                                                                                        new CompoundStatement(
+                                                                                                                                new WriteHeapStatement(
+                                                                                                                                        "v2",
+                                                                                                                                        new ArithmeticExpression("*",
+                                                                                                                                                new ReadHeapExpression(new VariableExpression("v2")),
+                                                                                                                                                new ConstantExpression(new IntegerValue(10))
+                                                                                                                                        )
+                                                                                                                                ),
+                                                                                                                                new UnlockStatement("q")
+                                                                                                                        )
+                                                                                                                )
+                                                                                                        )
+                                                                                                ),
+                                                                                                new CompoundStatement(
+                                                                                                        new SkipStatement(),
+                                                                                                        new CompoundStatement(
+                                                                                                                new SkipStatement(),
+                                                                                                                new CompoundStatement(
+                                                                                                                        new SkipStatement(),
+                                                                                                                        new CompoundStatement(
+                                                                                                                                new SkipStatement(),
+                                                                                                                                new CompoundStatement(
+                                                                                                                                        new LockStatement("x"),
+                                                                                                                                        new CompoundStatement(
+                                                                                                                                                new PrintStatement(new ReadHeapExpression(new VariableExpression("v1"))),
+                                                                                                                                                new CompoundStatement(
+                                                                                                                                                        new UnlockStatement("x"),
+                                                                                                                                                        new CompoundStatement(
+                                                                                                                                                                new LockStatement("q"),
+                                                                                                                                                                new CompoundStatement(
+                                                                                                                                                                        new PrintStatement(new ReadHeapExpression(new VariableExpression("v2"))),
+                                                                                                                                                                        new UnlockStatement("q")
+                                                                                                                                                                )
+                                                                                                                                                        )
+                                                                                                                                                )
+                                                                                                                                        )
+                                                                                                                                )
+                                                                                                                        )
+                                                                                                                )
+                                                                                                        )
+                                                                                                )
+                                                                                        )
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+
+
+        Statement exConditionalAssign =
+                new CompoundStatement(
+                        new VariableDeclarationStatement("a", new RefType(new IntegerType())),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("b", new RefType(new IntegerType())),
+                                new CompoundStatement(
+                                        new VariableDeclarationStatement("v", new IntegerType()),
+                                        new CompoundStatement(
+                                                new NewStatement("a", new ConstantExpression(new IntegerValue(0))),
+                                                new CompoundStatement(
+                                                        new NewStatement("b", new ConstantExpression(new IntegerValue(0))),
+                                                        new CompoundStatement(
+                                                                new WriteHeapStatement("a", new ConstantExpression(new IntegerValue(1))),
+                                                                new CompoundStatement(
+                                                                        new WriteHeapStatement("b", new ConstantExpression(new IntegerValue(2))),
+                                                                        new CompoundStatement(
+                                                                                new ConditionalAssignmentStatement(
+                                                                                        "v",
+                                                                                        new RelationalExpression(
+                                                                                                new ReadHeapExpression(new VariableExpression("a")),
+                                                                                                new ReadHeapExpression(new VariableExpression("b")),
+                                                                                                "<"
+                                                                                        ),
+                                                                                        new ConstantExpression(new IntegerValue(100)),
+                                                                                        new ConstantExpression(new IntegerValue(200))
+                                                                                ),
+                                                                                new CompoundStatement(
+                                                                                        new PrintStatement(new VariableExpression("v")),
+                                                                                        new CompoundStatement(
+                                                                                                new ConditionalAssignmentStatement(
+                                                                                                        "v",
+                                                                                                        new RelationalExpression(
+                                                                                                                new ArithmeticExpression(
+                                                                                                                        "-",
+                                                                                                                        new ReadHeapExpression(new VariableExpression("b")),
+                                                                                                                        new ConstantExpression(new IntegerValue(2))
+                                                                                                                ),
+                                                                                                                new ReadHeapExpression(new VariableExpression("a")),
+                                                                                                                ">"
+                                                                                                        ),
+                                                                                                        new ConstantExpression(new IntegerValue(100)),
+                                                                                                        new ConstantExpression(new IntegerValue(200))
+                                                                                                ),
+                                                                                                new PrintStatement(new VariableExpression("v"))
+                                                                                        )
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                );
+
+        examples.add(new ProgramExample(
+                "CONDITIONAL VARIABLE: Ref int a, Ref int b, int v; new(a,0), new(b,0); wh(a,1), wh(b,2); v =(rh(a)<rh(b))?100:200; print(v);  v=((rh(b)-2)>rh(a))?100:200; print(v); // expected output: {100,200}",
+                exConditionalAssign));
         return examples;
     }
 }
