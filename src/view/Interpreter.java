@@ -79,6 +79,12 @@ public class Interpreter {
             // -------------------------------
             IProcTable procTable = new ProcTable();
 
+            try{
+                procTable.add("sum", List.of("a", "b"), ExamplePrograms.buildSumBody());
+                procTable.add("product", List.of("a", "b"), ExamplePrograms.buildProductBody());
+            }catch (MyException e) {
+                System.out.println("ProcTable init error: " + e.getMessage());}
+
             // If you have a “procedure example program”, you can register procedures here.
             // Otherwise, procTable stays empty for old examples and they still work.
 

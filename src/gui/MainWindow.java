@@ -71,10 +71,17 @@ public class MainWindow extends Application {
         //ProcTable (global shared)
         IProcTable procTable = new ProcTable();
 
+        try {
+            procTable.add("sum", List.of("a", "b"), view.ExamplePrograms.buildSumBody());
+            procTable.add("product", List.of("a", "b"), view.ExamplePrograms.buildProductBody());
+        } catch (exceptions.MyException e) {
+            e.printStackTrace();
+        }
+
         //push program ONCE
 
         exeStack.push(program);
-        
+
         programState = new ProgramState(
                 exeStack,
                 symTableStack,

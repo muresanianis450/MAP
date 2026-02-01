@@ -30,7 +30,35 @@ public class ExamplePrograms {
             }
         }
 
+    public static Statement buildSumBody() {
+        return new CompoundStatement(
+                new VariableDeclarationStatement("v", new IntegerType()),
+                new CompoundStatement(
+                        new AssignmentStatement("v",
+                                new ArithmeticExpression("+",
+                                        new VariableExpression("a"),
+                                        new VariableExpression("b")
+                                )
+                        ),
+                        new PrintStatement(new VariableExpression("v"))
+                )
+        );
+    }
 
+    public static Statement buildProductBody() {
+        return new CompoundStatement(
+                new VariableDeclarationStatement("v", new IntegerType()),
+                new CompoundStatement(
+                        new AssignmentStatement("v",
+                                new ArithmeticExpression("*",
+                                        new VariableExpression("a"),
+                                        new VariableExpression("b")
+                                )
+                        ),
+                        new PrintStatement(new VariableExpression("v"))
+                )
+        );
+    }
     public static List<ProgramExample> getPrograms() {
         List<ProgramExample> examples = new ArrayList<>();
 
@@ -457,7 +485,7 @@ public class ExamplePrograms {
                 )
         ));
 
-        //PROCEDURES
+        // ================= PROCEDURE DEMO =================
 
         Statement sumBody =
                 new CompoundStatement(
@@ -473,24 +501,51 @@ public class ExamplePrograms {
                         )
                 );
 
-        Statement main =
+        Statement productBody =
                 new CompoundStatement(
-                        new AssignmentStatement("v", new ConstantExpression(new IntegerValue(2))),
+                        new VariableDeclarationStatement("v", new IntegerType()),
                         new CompoundStatement(
-                                new AssignmentStatement("w", new ConstantExpression(new IntegerValue(5))),
+                                new AssignmentStatement("v",
+                                        new ArithmeticExpression("*",
+                                                new VariableExpression("a"),
+                                                new VariableExpression("b")
+                                        )
+                                ),
+                                new PrintStatement(new VariableExpression("v"))
+                        )
+                );
+
+        Statement procMain =
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v", new IntegerType()),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("w", new IntegerType()),
                                 new CompoundStatement(
-                                        new CallStatement("sum", List.of(
-                                                new ArithmeticExpression("*", new VariableExpression("v"), new ConstantExpression(new IntegerValue(10))),
-                                                new VariableExpression("w")
-                                        )),
+                                        new AssignmentStatement("v", new ConstantExpression(new IntegerValue(2))),
                                         new CompoundStatement(
-                                                new PrintStatement(new VariableExpression("v")),
+                                                new AssignmentStatement("w", new ConstantExpression(new IntegerValue(5))),
                                                 new CompoundStatement(
-                                                        new ForkStatement(
-                                                                new CallStatement("product", List.of(new VariableExpression("v"), new VariableExpression("w")))
-                                                        ),
-                                                        new ForkStatement(
-                                                                new CallStatement("sum", List.of(new VariableExpression("v"), new VariableExpression("w")))
+                                                        new CallStatement("sum", List.of(
+                                                                new ArithmeticExpression("*",
+                                                                        new VariableExpression("v"),
+                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                ),
+                                                                new VariableExpression("w")
+                                                        )),
+                                                        new CompoundStatement(
+                                                                new PrintStatement(new VariableExpression("v")),
+                                                                new CompoundStatement(
+                                                                        new ForkStatement(
+                                                                                new CallStatement("product",
+                                                                                        List.of(new VariableExpression("v"),
+                                                                                                new VariableExpression("w")))
+                                                                        ),
+                                                                        new ForkStatement(
+                                                                                new CallStatement("sum",
+                                                                                        List.of(new VariableExpression("v"),
+                                                                                                new VariableExpression("w")))
+                                                                        )
+                                                                )
                                                         )
                                                 )
                                         )
@@ -499,15 +554,10 @@ public class ExamplePrograms {
                 );
 
         examples.add(new ProgramExample(
-                "Procedures demo: v=2; w=5; call sum(v*10,w); print(v); fork(call product(v,w)); fork(call sum(v,w))",
-                new CompoundStatement(
-                        new VariableDeclarationStatement("v", new IntegerType()),
-                        new CompoundStatement(
-                                new VariableDeclarationStatement("w", new IntegerType()),
-                                main
-                        )
-                )
-        ));
+                "Procedures demo (final Out should be {25,2,10,7})",
+                procMain));
+
+
 
         return examples;
     }
