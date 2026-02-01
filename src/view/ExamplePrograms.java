@@ -558,6 +558,54 @@ public class ExamplePrograms {
                 procMain));
 
 
+        examples.add(new ProgramExample(
+                "Sleep demo: v=0; while(v<3){ fork(print(v); v=v+1); v=v+1 }; sleep(5); print(v*10)  // final Out {0,1,2,30}",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v", new IntegerType()),
+                        new CompoundStatement(
+                                new AssignmentStatement("v", new ConstantExpression(new IntegerValue(0))),
+                                new CompoundStatement(
+                                        new WhileStatement(
+                                                new RelationalExpression(
+                                                        new VariableExpression("v"),
+                                                        new ConstantExpression(new IntegerValue(3)),
+                                                        "<"
+                                                ),
+                                                new CompoundStatement(
+                                                        new ForkStatement(
+                                                                new CompoundStatement(
+                                                                        new PrintStatement(new VariableExpression("v")),
+                                                                        new AssignmentStatement(
+                                                                                "v",
+                                                                                new ArithmeticExpression("+",
+                                                                                        new VariableExpression("v"),
+                                                                                        new ConstantExpression(new IntegerValue(1))
+                                                                                )
+                                                                        )
+                                                                )
+                                                        ),
+                                                        new AssignmentStatement(
+                                                                "v",
+                                                                new ArithmeticExpression("+",
+                                                                        new VariableExpression("v"),
+                                                                        new ConstantExpression(new IntegerValue(1))
+                                                                )
+                                                        )
+                                                )
+                                        ),
+                                        new CompoundStatement(
+                                                new SleepStatement(5),
+                                                new PrintStatement(
+                                                        new ArithmeticExpression("*",
+                                                                new VariableExpression("v"),
+                                                                new ConstantExpression(new IntegerValue(10))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
 
         return examples;
     }
