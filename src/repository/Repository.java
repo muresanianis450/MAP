@@ -42,8 +42,14 @@ public class Repository implements IRepository {
             logFile.println("ExeStack:");
             logFile.println(state.executionStack());  // will rely on stack's custom toString()
 
-            logFile.println("SymTable:");
-            logFile.println(state.symbolTable());
+           // logFile.println("SymTable:");
+           // logFile.println(state.symbolTable());
+
+            logFile.println("SymTableStack:");
+            logFile.println(state.symTableStack());
+
+            logFile.println("ProcTable:");
+            logFile.println(state.procTable());
 
             logFile.println("Out:");
             logFile.println(state.out());

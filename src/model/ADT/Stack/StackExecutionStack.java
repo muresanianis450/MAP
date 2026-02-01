@@ -36,4 +36,15 @@ public class StackExecutionStack<T> implements IStack<T>  {
     public List<T> getInternalList(){
         return stack;
     }
+
+    @Override
+    public T peek(){
+        return stack.getFirst(); // becasue addFirst = top
+    }
+
+    @Override
+    public List<T> getReversed() {
+        // top -> bottom
+        return new LinkedList<>(stack);
+    }
 }

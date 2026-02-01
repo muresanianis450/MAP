@@ -9,6 +9,8 @@ import model.type.Type;
 import model.value.Value;
 import exceptions.MyException;
 
+import java.util.List;
+
 public class ForkStatement implements Statement {
     private final Statement forkedStatement;
 
@@ -29,19 +31,28 @@ public class ForkStatement implements Statement {
 
         //FOR SAFETY WE COPY THE SYMBOL TABLE MANUALLY
 
-        IMap<String, Value> newSymbolTable = new SymbolTable<>();
+        /* IMap<String, Value> newSymbolTable = new SymbolTable<>();
         for (var entry : parentState.symbolTable().getContent().entrySet()) {
             newSymbolTable.add(entry.getKey(), entry.getValue().deepCopy());
+        }*/
+
+        IStack<IMap<String,Value>> newSymStack = new StackExecutionStack<>();
+        List<IMap<String,Value>> topFirst = parentState.symTableStack().getReversed();
+        //top first : [TOP, ... , BOTTOM] because internal list is top-first (LinkedList)
+        for(int i = topFirst.size() - 1 ; i >= 0 ; i--){
+            newSymStack.push(deepCopySymTable(topFirst.get(i)));
         }
+
 
         //heap, Out, FileTable are shared
         return new ProgramState(
                 newStack,
-                newSymbolTable,
+                newSymStack,
                 parentState.out(),        // Shared output
                 parentState.fileTable(),  // Shared file table
                 parentState.heap(),
-                parentState.lockTable(),// Shared heap
+                parentState.lockTable(),
+                parentState.procTable(),// Shared heap
                 forkedStatement           // Original program pushed on stack
         );
 
@@ -61,5 +72,14 @@ public class ForkStatement implements Statement {
     public IMap<String, Type> typeCheck(IMap<String, Type> typeEnv) throws MyException {
         forkedStatement.typeCheck(typeEnv.deepCopy());
         return typeEnv;
+    }
+
+    //we need to clone all the stack for proc
+    private IMap<String,Value> deepCopySymTable (IMap<String,Value> st){
+        IMap<String,Value> copy = new SymbolTable<>();
+        for( var e : st.getContent().entrySet() ){
+            copy.add(e.getKey(), e.getValue().deepCopy());
+        }
+        return copy;
     }
 }

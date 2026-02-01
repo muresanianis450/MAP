@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
+import model.ADT.ProcTable.IProcTable;
+import model.ADT.ProcTable.ProcTable;
+import model.ADT.Map.SymbolTable;
 public class MainWindow extends Application {
 
     private Statement program; // Selected program
@@ -60,8 +64,28 @@ public class MainWindow extends Application {
         IFileTable fileTable = new model.ADT.FileTable.FileTable();
         ILockTable lockTable = new model.ADT.LockTable.LockTable();
 
-        programState = new ProgramState(exeStack, symTableMap, out, fileTable, heap, lockTable, program);
+        //PROCEDURES
+        IStack<IMap<String,Value>> symTableStack = new model.ADT.Stack.StackExecutionStack<>();
+        symTableStack.push(new SymbolTable());
+
+        //ProcTable (global shared)
+        IProcTable procTable = new ProcTable();
+
+        //push program ONCE
+
         exeStack.push(program);
+        
+        programState = new ProgramState(
+                exeStack,
+                symTableStack,
+                out,
+                fileTable,
+                heap,
+                lockTable,
+                procTable,
+                program
+        );
+
 
         repo = new Repository("GUI_LOGFILE.txt");
         repo.addProgram(programState);

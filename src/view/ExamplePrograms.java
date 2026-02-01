@@ -457,6 +457,58 @@ public class ExamplePrograms {
                 )
         ));
 
+        //PROCEDURES
+
+        Statement sumBody =
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v", new IntegerType()),
+                        new CompoundStatement(
+                                new AssignmentStatement("v",
+                                        new ArithmeticExpression("+",
+                                                new VariableExpression("a"),
+                                                new VariableExpression("b")
+                                        )
+                                ),
+                                new PrintStatement(new VariableExpression("v"))
+                        )
+                );
+
+        Statement main =
+                new CompoundStatement(
+                        new AssignmentStatement("v", new ConstantExpression(new IntegerValue(2))),
+                        new CompoundStatement(
+                                new AssignmentStatement("w", new ConstantExpression(new IntegerValue(5))),
+                                new CompoundStatement(
+                                        new CallStatement("sum", List.of(
+                                                new ArithmeticExpression("*", new VariableExpression("v"), new ConstantExpression(new IntegerValue(10))),
+                                                new VariableExpression("w")
+                                        )),
+                                        new CompoundStatement(
+                                                new PrintStatement(new VariableExpression("v")),
+                                                new CompoundStatement(
+                                                        new ForkStatement(
+                                                                new CallStatement("product", List.of(new VariableExpression("v"), new VariableExpression("w")))
+                                                        ),
+                                                        new ForkStatement(
+                                                                new CallStatement("sum", List.of(new VariableExpression("v"), new VariableExpression("w")))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                );
+
+        examples.add(new ProgramExample(
+                "Procedures demo: v=2; w=5; call sum(v*10,w); print(v); fork(call product(v,w)); fork(call sum(v,w))",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v", new IntegerType()),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("w", new IntegerType()),
+                                main
+                        )
+                )
+        ));
+
         return examples;
     }
 }

@@ -5,6 +5,7 @@ import model.ADT.FileTable.IFileTable;
 import model.ADT.List.IList;
 import model.ADT.Map.IMap;
 import model.ADT.Heap.IHeap;
+import model.ADT.ProcTable.IProcTable;
 import model.ADT.Stack.IStack;
 import model.statement.Statement;
 import model.type.IntegerType;
@@ -16,29 +17,36 @@ public class ProgramState {
     private static int lastId = 0;
 
     private final IStack<Statement> executionStack;
-    private final IMap<String, Value> symbolTable;
+ // private final IMap<String, Value> symbolTable;
     private final IHeap heap;
     private final IList<Value> out;
     private final IFileTable fileTable;
     private final int id;
-    private final ILockTable lockTable;
 
+
+
+    private final ILockTable lockTable;
+    private final IStack<IMap<String,Value>> symTableStack;
+    private final IProcTable procTable;
     public ProgramState(IStack<Statement> executionStack,
-                        IMap<String, Value> symbolTable,
+                        IStack<IMap<String, Value>>symbolTableStack,
                         IList<Value> out,
                         IFileTable fileTable,
                         IHeap heap,
                         ILockTable lockTable,
+                        IProcTable procTable,
                         Statement originalProgram
                         ) {
 
         this.executionStack = executionStack;
-        this.symbolTable = symbolTable;
         this.heap = heap;
         this.out = out;
-        this.lockTable = lockTable;
         this.fileTable = fileTable;
         this.id = newId(); //assign unique ID
+
+        this.lockTable = lockTable;
+        this.symTableStack = symbolTableStack;
+        this.procTable = procTable;
     }
 
     public static synchronized int newId() {
@@ -49,10 +57,6 @@ public class ProgramState {
 
     public IStack<Statement> executionStack() {
         return executionStack;
-    }
-
-    public IMap<String, Value> symbolTable() {
-        return symbolTable;
     }
 
     public IList<Value> out() {
@@ -74,10 +78,10 @@ public class ProgramState {
     public ILockTable lockTable() {
         return lockTable;
     }
+
     public boolean isNotCompleted() {
         return !executionStack.isEmpty();
     }
-
     public ProgramState oneStep() throws MyException {
         if (executionStack.isEmpty()) {
             throw new MyException("Execution stack is empty!");
@@ -92,10 +96,12 @@ public class ProgramState {
         return "------------------------------------------------------------\n" +
                 "ID: " + id + "\n" +
                 "ExeStack:\n" + executionStack +
-                "\nSymTable:\n" + symbolTable +
+                //"\nSymTable:\n" + symbolTable +
+                "\nSymTableStack:\n" + symTableStack +
                 "\nOut:\n" + out +
                 "\nFileTable:\n" + fileTable +
                 "\nHeap:\n" + heap +
+                "\nProcTable:\n" + procTable +
                 "\nLockTable:\n" + lockTable +
                 "\n------------------------------------------------------------\n";
     }
@@ -103,4 +109,26 @@ public class ProgramState {
     public String getId() {
           return Integer.toString(id);
     }
+
+    public IMap<String, Value> symbolTable() {
+        //return symbolTable;
+        return symTableStack.peek();
+    }
+    public IStack<IMap<String,Value>> symTableStack(){
+        return symTableStack;
+    }
+
+    public void pushSymTable(IMap<String,Value> newTable) {
+        symTableStack.push(newTable);
+    }
+
+    public void popSymTable() throws MyException {
+        if(symTableStack.isEmpty()){
+            throw new MyException("SymTable stack is empty!");
+        }
+        symTableStack.pop();
+    }
+
+    public IProcTable procTable() {return procTable;}
+
 }
