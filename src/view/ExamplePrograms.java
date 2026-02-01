@@ -798,6 +798,83 @@ public class ExamplePrograms {
         examples.add(new ProgramExample(
                 "CONDITIONAL VARIABLE: Ref int a, Ref int b, int v; new(a,0), new(b,0); wh(a,1), wh(b,2); v =(rh(a)<rh(b))?100:200; print(v);  v=((rh(b)-2)>rh(a))?100:200; print(v); // expected output: {100,200}",
                 exConditionalAssign));
+
+        examples.add(new ProgramExample(
+                "Repeat-Until with Fork: int v; int x; int y; v=0; repeat (fork(print(v);v=v-1); v=v+1) until v==3; x=1; y=3; print(v*10)",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v", new IntegerType()),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("x", new IntegerType()),
+                                new CompoundStatement(
+                                        new VariableDeclarationStatement("y", new IntegerType()),
+                                        new CompoundStatement(
+                                                new AssignmentStatement(
+                                                        "v",
+                                                        new ConstantExpression(new IntegerValue(0))
+                                                ),
+                                                new CompoundStatement(
+                                                        new RepeatUntilStatement(
+                                                                // repeat body: (fork(print(v);v=v-1); v=v+1)
+                                                                new CompoundStatement(
+                                                                        new ForkStatement(
+                                                                                new CompoundStatement(
+                                                                                        new PrintStatement(new VariableExpression("v")),
+                                                                                        new AssignmentStatement(
+                                                                                                "v",
+                                                                                                new ArithmeticExpression(
+                                                                                                        "-",
+                                                                                                        new VariableExpression("v"),
+                                                                                                        new ConstantExpression(new IntegerValue(1))
+                                                                                                )
+                                                                                        )
+                                                                                )
+                                                                        ),
+                                                                        new AssignmentStatement(
+                                                                                "v",
+                                                                                new ArithmeticExpression(
+                                                                                        "+",
+                                                                                        new VariableExpression("v"),
+                                                                                        new ConstantExpression(new IntegerValue(1))
+                                                                                )
+                                                                        )
+                                                                ),
+                                                                // until condition: v == 3
+                                                                new RelationalExpression(
+                                                                        new VariableExpression("v"),
+                                                                        new ConstantExpression(new IntegerValue(3)),
+                                                                        "=="
+                                                                )
+                                                        ),
+                                                        new CompoundStatement(
+                                                                new AssignmentStatement(
+                                                                        "x",
+                                                                        new ConstantExpression(new IntegerValue(1))
+                                                                ),
+                                                                new CompoundStatement(
+                                                                        new AssignmentStatement(
+                                                                                "y",
+                                                                                new ConstantExpression(new IntegerValue(3))
+                                                                        ),
+                                                                        new PrintStatement(
+                                                                                new ArithmeticExpression(
+                                                                                        "*",
+                                                                                        new VariableExpression("v"),
+                                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+
         return examples;
     }
+
+
+
+
 }
