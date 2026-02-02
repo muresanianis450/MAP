@@ -83,6 +83,12 @@ public class Repository implements IRepository {
                 logFile.println(entry.getKey() + " -> " + entry.getValue());
             }
 
+            logFile.println("SemaphoreTable:");
+            var semContent = state.semaphoreTable().getContent();
+            for(var entry : semContent.entrySet()){
+                logFile.println(entry.getKey() + " -> "  + entry.getValue());
+            }
+
             logFile.println("------------------------------------------------------------\n");
 
         } catch (IOException e) {

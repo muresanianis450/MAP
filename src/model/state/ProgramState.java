@@ -13,6 +13,7 @@ import model.value.IntegerValue;
 import model.value.Value;
 import model.ADT.LockTable.ILockTable;
 import model.ADT.BarrierTable.IBarrierTable;
+import model.ADT.SemaphoreTable.ISemaphoreTable;
 
 import model.ADT.LatchTable.ILatchTable;
 public class ProgramState {
@@ -33,6 +34,7 @@ public class ProgramState {
     private final IProcTable procTable;
     private final IBarrierTable barrierTable;
     private final ILatchTable latchTable;
+    private final ISemaphoreTable semaphoreTable;
     public ProgramState(IStack<Statement> executionStack,
                         IStack<IMap<String, Value>>symbolTableStack,
                         IList<Value> out,
@@ -42,6 +44,7 @@ public class ProgramState {
                         IProcTable procTable,
                         IBarrierTable barrierTable,
                         ILatchTable latchTable,
+                        ISemaphoreTable semaphoreTable,
                         Statement originalProgram
                         ) {
 
@@ -56,6 +59,7 @@ public class ProgramState {
         this.procTable = procTable;
         this.barrierTable =  barrierTable;
         this.latchTable = latchTable;
+        this.semaphoreTable = semaphoreTable;
     }
 
     public static synchronized int newId() {
@@ -100,6 +104,9 @@ public class ProgramState {
         return current.execute(this);
     }
 
+    public ISemaphoreTable semaphoreTable() {
+        return semaphoreTable;
+    }
 
     public ILatchTable latchTable() {
         return latchTable;
@@ -118,6 +125,7 @@ public class ProgramState {
                 "\nBarrierTable:\n" + barrierTable +
                 "\nLockTable:\n" + lockTable +
                 "\nLatchTable:\n" + latchTable +
+                "\nSemaphoreTable:\n" + semaphoreTable +
                 "\n------------------------------------------------------------\n";
     }
 

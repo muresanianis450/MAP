@@ -1063,7 +1063,7 @@ public class ExamplePrograms {
                                                                                         ),
                                                                                         new CompoundStatement(
                                                                                                 // await(cnt)
-                                                                                                new AwaitStatement("cnt"),
+                                                                                                new AwaitLatchStatement("cnt"),
                                                                                                 new CompoundStatement(
                                                                                                         // print(100)
                                                                                                         new PrintStatement(new ConstantExpression(new IntegerValue(100))),
@@ -1088,6 +1088,103 @@ public class ExamplePrograms {
         examples.add(new ProgramExample(
                 "LATCH: expected output {20,id1,30,id2,40,id3,100,id_parent,100}",
                 exLatch));
+
+
+        //Semaphore example
+        examples.add(new ProgramExample(
+                "Ref int v1; int cnt; " +
+                        "new(v1,1); createSemaphore(cnt,rH(v1)); " +
+                        "fork(acquire(cnt); wh(v1,rH(v1)*10); print(rH(v1)); release(cnt)); " +
+                        "fork(acquire(cnt); wh(v1,rH(v1)*10); wh(v1,rH(v1)*2); print(rH(v1)); release(cnt)); " +
+                        "acquire(cnt); print(rH(v1)-1); release(cnt)",
+
+                new CompoundStatement(
+                        // Ref int v1;
+                        new VariableDeclarationStatement("v1", new RefType(new IntegerType())),
+                        new CompoundStatement(
+                                // int cnt;
+                                new VariableDeclarationStatement("cnt", new IntegerType()),
+                                new CompoundStatement(
+                                        // new(v1,1);
+                                        new NewStatement("v1", new ConstantExpression(new IntegerValue(1))),
+                                        new CompoundStatement(
+                                                // createSemaphore(cnt, rH(v1));
+                                                new CreateSemaphoreStatement("cnt", new ReadHeapExpression(new VariableExpression("v1"))),
+
+                                                new CompoundStatement(
+                                                        // fork( acquire(cnt); wh(v1, rH(v1)*10); print(rH(v1)); release(cnt) );
+                                                        new ForkStatement(
+                                                                new CompoundStatement(
+                                                                        new AcquireStatement("cnt"),
+                                                                        new CompoundStatement(
+                                                                                new WriteHeapStatement(
+                                                                                        "v1",
+                                                                                        new ArithmeticExpression("*",
+                                                                                                new ReadHeapExpression(new VariableExpression("v1")),
+                                                                                                new ConstantExpression(new IntegerValue(10))
+                                                                                        )
+                                                                                ),
+                                                                                new CompoundStatement(
+                                                                                        new PrintStatement(new ReadHeapExpression(new VariableExpression("v1"))),
+                                                                                        new ReleaseStatement("cnt")
+                                                                                )
+                                                                        )
+                                                                )
+                                                        ),
+
+                                                        new CompoundStatement(
+                                                                // fork( acquire(cnt); wh(v1, rH(v1)*10); wh(v1, rH(v1)*2); print(rH(v1)); release(cnt) );
+                                                                new ForkStatement(
+                                                                        new CompoundStatement(
+                                                                                new AcquireStatement("cnt"),
+                                                                                new CompoundStatement(
+                                                                                        new WriteHeapStatement(
+                                                                                                "v1",
+                                                                                                new ArithmeticExpression("*",
+                                                                                                        new ReadHeapExpression(new VariableExpression("v1")),
+                                                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                                                )
+                                                                                        ),
+                                                                                        new CompoundStatement(
+                                                                                                new WriteHeapStatement(
+                                                                                                        "v1",
+                                                                                                        new ArithmeticExpression("*",
+                                                                                                                new ReadHeapExpression(new VariableExpression("v1")),
+                                                                                                                new ConstantExpression(new IntegerValue(2))
+                                                                                                        )
+                                                                                                ),
+                                                                                                new CompoundStatement(
+                                                                                                        new PrintStatement(new ReadHeapExpression(new VariableExpression("v1"))),
+                                                                                                        new ReleaseStatement("cnt")
+                                                                                                )
+                                                                                        )
+                                                                                )
+                                                                        )
+                                                                ),
+
+                                                                new CompoundStatement(
+                                                                        // acquire(cnt);
+                                                                        new AcquireStatement("cnt"),
+                                                                        new CompoundStatement(
+                                                                                // print(rH(v1)-1);
+                                                                                new PrintStatement(
+                                                                                        new ArithmeticExpression("-",
+                                                                                                new ReadHeapExpression(new VariableExpression("v1")),
+                                                                                                new ConstantExpression(new IntegerValue(1))
+                                                                                        )
+                                                                                ),
+                                                                                // release(cnt)
+                                                                                new ReleaseStatement("cnt")
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+
         return examples;
     }
 

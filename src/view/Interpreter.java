@@ -10,6 +10,8 @@ import model.ADT.List.ListOut;
 import model.ADT.LockTable.LockTable;
 import model.ADT.Map.IMap;
 import model.ADT.Map.SymbolTable;
+import model.ADT.SemaphoreTable.ISemaphoreTable;
+import model.ADT.SemaphoreTable.SemaphoreTable;
 import model.ADT.Stack.StackExecutionStack;
 import model.state.ProgramState;
 import model.statement.Statement;
@@ -97,12 +99,16 @@ public class Interpreter {
             IBarrierTable barrierTable = new BarrierTable();
 
             ILatchTable latchTable = new LatchTable();
+
+            ISemaphoreTable semaphoreTable = new SemaphoreTable();
             // If you have a “procedure example program”, you can register procedures here.
             // Otherwise, procTable stays empty for old examples and they still work.
 
             // -------------------------------
             // NEW: ProgramState creation
             // -------------------------------
+
+
             StackExecutionStack<Statement> exeStack = new StackExecutionStack<>();
             exeStack.push(program); // push ONCE here
 
@@ -116,6 +122,7 @@ public class Interpreter {
                     procTable,
                     barrierTable,
                     latchTable,
+                    semaphoreTable,
                     program
             );
 

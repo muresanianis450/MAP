@@ -12,6 +12,7 @@ public class GUIController {
 
     private IRepository repo;
     private ExecutorService executor;
+    private int rrIndex = 0;
 
     public GUIController(IRepository repo) {
         this.repo = repo;
@@ -27,7 +28,40 @@ public class GUIController {
 
     public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException, MyException {
 
-        // keep only runnable programs for stepping
+
+ //ROUND-ROBIN IMPLEMENTATION ( one step for ONE program per click ( for semaphores and GUI)) 
+        // keep only runnable
+        List<ProgramState> runnable = removeCompletedPrg(prgList);
+        if (runnable.isEmpty()) {
+            throw new MyException("Program finished!");
+        }
+
+        // keep repo list in sync with runnable (optional but keeps GUI clean)
+        repo.setProgramList(runnable);
+
+        // round-robin: pick ONE program state to execute this click
+        if (rrIndex >= runnable.size()) rrIndex = 0;
+
+        ProgramState current = runnable.get(rrIndex);
+
+        // log BEFORE step (step-by-step requirement)
+        repo.logPrgStateExec(current);
+
+        // execute one step
+        ProgramState forked = current.oneStep();
+
+        // if fork happened, add new state
+        if (forked != null) {
+            runnable.add(forked);
+        }
+
+        // advance round-robin index for next click
+        rrIndex++;
+        if (rrIndex >= runnable.size()) rrIndex = 0;
+
+        repo.setProgramList(runnable);
+
+     /*   // keep only runnable programs for stepping
         List<ProgramState> runnable = removeCompletedPrg(prgList);
 
         if (runnable.isEmpty()) {
@@ -63,7 +97,7 @@ public class GUIController {
         // Optional: log AFTER (but it doubles file size)
         // for (ProgramState prg : prgList) repo.logPrgStateExec(prg);
 
-        repo.setProgramList(prgList);
+        repo.setProgramList(prgList); */
     }
 
 
