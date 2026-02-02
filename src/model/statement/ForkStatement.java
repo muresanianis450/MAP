@@ -10,7 +10,7 @@ import model.value.Value;
 import exceptions.MyException;
 
 import java.util.List;
-
+import model.ADT.BarrierTable.IBarrierTable;
 public class ForkStatement implements Statement {
     private final Statement forkedStatement;
 
@@ -48,12 +48,13 @@ public class ForkStatement implements Statement {
         return new ProgramState(
                 newStack,
                 newSymStack,
-                parentState.out(),        // Shared output
-                parentState.fileTable(),  // Shared file table
+                parentState.out(),
+                parentState.fileTable(),
                 parentState.heap(),
                 parentState.lockTable(),
-                parentState.procTable(),// Shared heap
-                forkedStatement           // Original program pushed on stack
+                parentState.procTable(),
+                parentState.barrierTable(),
+                forkedStatement
         );
 
     }

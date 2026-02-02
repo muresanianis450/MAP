@@ -1,4 +1,5 @@
 package repository;
+import model.ADT.BarrierTable.BarrierEntry;
 import model.value.Value;
 import exceptions.MyException;
 import model.state.ProgramState;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import model.ADT.LockTable.ILockTable;
+import model.ADT.BarrierTable.BarrierTable;
 public class Repository implements IRepository {
 
     private List<ProgramState> programStates;
@@ -67,6 +69,12 @@ public class Repository implements IRepository {
             Map<Integer, Integer> lockContent = state.lockTable().getContent();
             for (Map.Entry<Integer, Integer> entry : lockContent.entrySet()) {
                 logFile.println(entry.getKey() + " -> " + entry.getValue());
+            }
+
+            logFile.println("BarrierTabel:");
+            Map<Integer, BarrierEntry> barrierContent = state.barrierTable().getContent();
+            for(var entry : barrierContent.entrySet()){
+                logFile.println(entry.getKey() + " -> "  + entry.getValue());
             }
 
             logFile.println("------------------------------------------------------------\n");

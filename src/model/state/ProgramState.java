@@ -12,6 +12,7 @@ import model.type.IntegerType;
 import model.value.IntegerValue;
 import model.value.Value;
 import model.ADT.LockTable.ILockTable;
+import model.ADT.BarrierTable.IBarrierTable;
 public class ProgramState {
 
     private static int lastId = 0;
@@ -28,6 +29,7 @@ public class ProgramState {
     private final ILockTable lockTable;
     private final IStack<IMap<String,Value>> symTableStack;
     private final IProcTable procTable;
+    private final IBarrierTable barrierTable;
     public ProgramState(IStack<Statement> executionStack,
                         IStack<IMap<String, Value>>symbolTableStack,
                         IList<Value> out,
@@ -35,6 +37,7 @@ public class ProgramState {
                         IHeap heap,
                         ILockTable lockTable,
                         IProcTable procTable,
+                        IBarrierTable barrierTable,
                         Statement originalProgram
                         ) {
 
@@ -47,6 +50,7 @@ public class ProgramState {
         this.lockTable = lockTable;
         this.symTableStack = symbolTableStack;
         this.procTable = procTable;
+        this.barrierTable =  barrierTable;
     }
 
     public static synchronized int newId() {
@@ -102,6 +106,7 @@ public class ProgramState {
                 "\nFileTable:\n" + fileTable +
                 "\nHeap:\n" + heap +
                 "\nProcTable:\n" + procTable +
+                "\nBarrierTable:\n" + barrierTable +
                 "\nLockTable:\n" + lockTable +
                 "\n------------------------------------------------------------\n";
     }
@@ -131,4 +136,5 @@ public class ProgramState {
 
     public IProcTable procTable() {return procTable;}
 
+    public IBarrierTable barrierTable() {return barrierTable;}
 }

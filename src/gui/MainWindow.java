@@ -2,6 +2,7 @@ package gui;
 
 import controller.GUIController;
 import exceptions.MyException;
+import model.ADT.BarrierTable.BarrierEntry;
 import model.ADT.FileTable.IFileTable;
 import model.ADT.Heap.IHeap;
 import model.ADT.List.IList;
@@ -31,6 +32,10 @@ import java.util.Map;
 import model.ADT.ProcTable.IProcTable;
 import model.ADT.ProcTable.ProcTable;
 import model.ADT.Map.SymbolTable;
+
+import model.ADT.BarrierTable.BarrierTable;
+import model.ADT.BarrierTable.IBarrierTable;
+
 public class MainWindow extends Application {
 
     private Statement program; // Selected program
@@ -48,10 +53,26 @@ public class MainWindow extends Application {
     private ListView<String> exeStackList;
     private Button runOneStepButton;
 
+    private TableView<BarrierEntryRow> barrierTableView;
     public MainWindow(Statement program) {
         this.program = program;
     }
 
+
+    public static class BarrierEntryRow{
+        private final Integer index;
+        private final Integer value;
+        private final String list;
+
+        public BarrierEntryRow(Integer index, Integer value, String list) {
+            this.index = index;
+            this.value = value;
+            this.list = list;
+        }
+        public Integer getIndex() { return index;}
+        public Integer getValue() { return value;}
+        public String getList() { return list; }
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Interpreter GUI - Main Window");
@@ -63,6 +84,7 @@ public class MainWindow extends Application {
         IHeap heap = new model.ADT.Heap.Heap();
         IFileTable fileTable = new model.ADT.FileTable.FileTable();
         ILockTable lockTable = new model.ADT.LockTable.LockTable();
+        IBarrierTable barrierTable = new BarrierTable();
 
         //PROCEDURES
         IStack<IMap<String,Value>> symTableStack = new model.ADT.Stack.StackExecutionStack<>();
@@ -90,6 +112,7 @@ public class MainWindow extends Application {
                 heap,
                 lockTable,
                 procTable,
+                barrierTable,
                 program
         );
 
@@ -118,6 +141,21 @@ public class MainWindow extends Application {
         varValueCol.setCellValueFactory(new PropertyValueFactory<>("value"));
         symTable.getColumns().addAll(varNameCol, varValueCol);
 
+        barrierTableView = new TableView<> ();
+
+        TableColumn<BarrierEntryRow,Integer> bIndexCol = new TableColumn<>("Barrier");
+        bIndexCol.setCellValueFactory(new PropertyValueFactory<>("index"));
+
+        TableColumn<BarrierEntryRow, Integer> bValueCol = new TableColumn<>("Value");
+        bValueCol.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+        TableColumn<BarrierEntryRow, String> bListCol = new TableColumn<>("List");
+        bListCol.setCellValueFactory(new PropertyValueFactory<>("list"));
+
+        barrierTableView.getColumns().addAll(bIndexCol, bValueCol, bListCol);
+
+
+
         // ListViews
         outList = new ListView<>();
         fileTableList = new ListView<>();
@@ -135,6 +173,7 @@ public class MainWindow extends Application {
         VBox leftBox = new VBox(10,
                 new Label("PrgState IDs"), prgStateIdsList,
                 new Label("Heap"), heapTable,
+                new Label("BarrierTable") , barrierTableView,
                 new Label("Out"), outList,
                 new Label("FileTable"), fileTableList
         );
@@ -184,6 +223,17 @@ public class MainWindow extends Application {
             heapEntries.add(new HeapEntry(e.getKey(), e.getValue().toString()));
         }
         heapTable.setItems(heapEntries);
+
+        var bt = programState.barrierTable();
+        ObservableList<BarrierEntryRow> barrierRows = FXCollections.observableArrayList();
+
+        for(Map.Entry<Integer,BarrierEntry> e : bt.getContent().entrySet()){
+            int idx = e.getKey();
+            int required = e.getValue().getRequired();
+            String list = e.getValue().getWaiting().toString();
+            barrierRows.add(new BarrierEntryRow(idx,required,list));
+        }
+        barrierTableView.setItems(barrierRows);
 
         // Update Out
         IList<Value> out = programState.out();

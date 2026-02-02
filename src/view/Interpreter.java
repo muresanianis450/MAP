@@ -22,6 +22,11 @@ import java.util.Scanner;
 import model.ADT.ProcTable.IProcTable;
 import model.ADT.ProcTable.ProcTable;
 
+// barrier Table
+import model.ADT.BarrierTable.IBarrierTable;
+import model.ADT.BarrierTable.BarrierTable;
+
+
 public class Interpreter {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -85,6 +90,10 @@ public class Interpreter {
             }catch (MyException e) {
                 System.out.println("ProcTable init error: " + e.getMessage());}
 
+
+            // ✅ NEW: BarrierTable (shared global)
+            IBarrierTable barrierTable = new BarrierTable();
+
             // If you have a “procedure example program”, you can register procedures here.
             // Otherwise, procTable stays empty for old examples and they still work.
 
@@ -102,6 +111,7 @@ public class Interpreter {
                     new Heap(),
                     new LockTable(),
                     procTable,
+                    barrierTable,
                     program
             );
 

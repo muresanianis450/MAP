@@ -29,7 +29,7 @@ public class RepeatUntilStatement implements Statement {
         Statement desugared = new CompoundStatement(
                 stmt1,
                 new WhileStatement(
-                        new NotExpression(exp2),
+                        new NotExpression(exp2), // NOT EXPRESSION  !!!!!!!!!!!! SPECIAL CLASS
                         stmt1.deepCopy()
                 )
         );
