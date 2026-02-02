@@ -54,6 +54,7 @@ public class ForkStatement implements Statement {
                 parentState.lockTable(),
                 parentState.procTable(),
                 parentState.barrierTable(),
+                parentState.latchTable(),
                 forkedStatement
         );
 

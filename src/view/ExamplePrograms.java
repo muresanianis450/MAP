@@ -958,6 +958,136 @@ public class ExamplePrograms {
         examples.add(new ProgramExample(
                 "BARRIER: //expected output {4,20,300}",
                 exBarrier));
+
+        // ================= LATCH EXAMPLE =================
+//
+// Ref int v1; Ref int v2; Ref int v3; int cnt;
+// new(v1,2);new(v2,3);new(v3,4);newLatch(cnt,rH(v2));
+// fork( wh(v1,rh(v1)*10); print(rh(v1)); countDown(cnt);
+//       fork( wh(v2,rh(v2)*10); print(rh(v2)); countDown(cnt);
+//             fork( wh(v3,rh(v3)*10); print(rh(v3)); countDown(cnt) ) ) );
+// await(cnt);
+// print(100);
+// countDown(cnt);
+// print(100)
+//
+// expected Out: {20,id-first-child,30,id-second-child,40,id-third-child,100,id_parent,100}
+
+        Statement exLatch =
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v1", new RefType(new IntegerType())),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("v2", new RefType(new IntegerType())),
+                                new CompoundStatement(
+                                        new VariableDeclarationStatement("v3", new RefType(new IntegerType())),
+                                        new CompoundStatement(
+                                                new VariableDeclarationStatement("cnt", new IntegerType()),
+                                                new CompoundStatement(
+                                                        new NewStatement("v1", new ConstantExpression(new IntegerValue(2))),
+                                                        new CompoundStatement(
+                                                                new NewStatement("v2", new ConstantExpression(new IntegerValue(3))),
+                                                                new CompoundStatement(
+                                                                        new NewStatement("v3", new ConstantExpression(new IntegerValue(4))),
+                                                                        new CompoundStatement(
+                                                                                new NewLatchStatement(
+                                                                                        "cnt",
+                                                                                        new ReadHeapExpression(new VariableExpression("v2"))
+                                                                                ),
+                                                                                new CompoundStatement(
+                                                                                        new ForkStatement(
+                                                                                                new CompoundStatement(
+                                                                                                        // wh(v1, rh(v1)*10)
+                                                                                                        new WriteHeapStatement(
+                                                                                                                "v1",
+                                                                                                                new ArithmeticExpression(
+                                                                                                                        "*",
+                                                                                                                        new ReadHeapExpression(new VariableExpression("v1")),
+                                                                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                                                                )
+                                                                                                        ),
+                                                                                                        new CompoundStatement(
+                                                                                                                // print(rh(v1))
+                                                                                                                new PrintStatement(
+                                                                                                                        new ReadHeapExpression(new VariableExpression("v1"))
+                                                                                                                ),
+                                                                                                                new CompoundStatement(
+                                                                                                                        // countDown(cnt)
+                                                                                                                        new CountDownStatement("cnt"),
+                                                                                                                        new ForkStatement(
+                                                                                                                                new CompoundStatement(
+                                                                                                                                        // wh(v2, rh(v2)*10)
+                                                                                                                                        new WriteHeapStatement(
+                                                                                                                                                "v2",
+                                                                                                                                                new ArithmeticExpression(
+                                                                                                                                                        "*",
+                                                                                                                                                        new ReadHeapExpression(new VariableExpression("v2")),
+                                                                                                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                                                                                                )
+                                                                                                                                        ),
+                                                                                                                                        new CompoundStatement(
+                                                                                                                                                // print(rh(v2))
+                                                                                                                                                new PrintStatement(
+                                                                                                                                                        new ReadHeapExpression(new VariableExpression("v2"))
+                                                                                                                                                ),
+                                                                                                                                                new CompoundStatement(
+                                                                                                                                                        // countDown(cnt)
+                                                                                                                                                        new CountDownStatement("cnt"),
+                                                                                                                                                        new ForkStatement(
+                                                                                                                                                                new CompoundStatement(
+                                                                                                                                                                        // wh(v3, rh(v3)*10)
+                                                                                                                                                                        new WriteHeapStatement(
+                                                                                                                                                                                "v3",
+                                                                                                                                                                                new ArithmeticExpression(
+                                                                                                                                                                                        "*",
+                                                                                                                                                                                        new ReadHeapExpression(new VariableExpression("v3")),
+                                                                                                                                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                                                                                                                                )
+                                                                                                                                                                        ),
+                                                                                                                                                                        new CompoundStatement(
+                                                                                                                                                                                // print(rh(v3))
+                                                                                                                                                                                new PrintStatement(
+                                                                                                                                                                                        new ReadHeapExpression(new VariableExpression("v3"))
+                                                                                                                                                                                ),
+                                                                                                                                                                                // countDown(cnt)
+                                                                                                                                                                                new CountDownStatement("cnt")
+                                                                                                                                                                        )
+                                                                                                                                                                )
+                                                                                                                                                        )
+                                                                                                                                                )
+                                                                                                                                        )
+                                                                                                                                )
+                                                                                                                        )
+                                                                                                                )
+                                                                                                        )
+                                                                                                )
+                                                                                        ),
+                                                                                        new CompoundStatement(
+                                                                                                // await(cnt)
+                                                                                                new AwaitStatement("cnt"),
+                                                                                                new CompoundStatement(
+                                                                                                        // print(100)
+                                                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(100))),
+                                                                                                        new CompoundStatement(
+                                                                                                                // countDown(cnt)
+                                                                                                                new CountDownStatement("cnt"),
+                                                                                                                // print(100)
+                                                                                                                new PrintStatement(new ConstantExpression(new IntegerValue(100)))
+                                                                                                        )
+                                                                                                )
+                                                                                        )
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                );
+
+        examples.add(new ProgramExample(
+                "LATCH: expected output {20,id1,30,id2,40,id3,100,id_parent,100}",
+                exLatch));
         return examples;
     }
 

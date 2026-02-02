@@ -36,6 +36,9 @@ import model.ADT.Map.SymbolTable;
 import model.ADT.BarrierTable.BarrierTable;
 import model.ADT.BarrierTable.IBarrierTable;
 
+import model.ADT.LatchTable.ILatchTable;
+import model.ADT.LatchTable.LatchTable;
+
 public class MainWindow extends Application {
 
     private Statement program; // Selected program
@@ -54,9 +57,12 @@ public class MainWindow extends Application {
     private Button runOneStepButton;
 
     private TableView<BarrierEntryRow> barrierTableView;
+    private TableView<LatchRow> latchTableView;
+
     public MainWindow(Statement program) {
         this.program = program;
     }
+
 
 
     public static class BarrierEntryRow{
@@ -73,6 +79,20 @@ public class MainWindow extends Application {
         public Integer getValue() { return value;}
         public String getList() { return list; }
     }
+
+
+    public static class LatchRow{
+        private final Integer location;
+        private final Integer value;
+
+        public LatchRow(Integer location, Integer value) {
+            this.location = location;
+            this.value = value;
+        }
+        public Integer getLocation() { return location; }
+        public Integer getValue() { return value; }
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Interpreter GUI - Main Window");
@@ -85,6 +105,7 @@ public class MainWindow extends Application {
         IFileTable fileTable = new model.ADT.FileTable.FileTable();
         ILockTable lockTable = new model.ADT.LockTable.LockTable();
         IBarrierTable barrierTable = new BarrierTable();
+        ILatchTable latchTable = new LatchTable();
 
         //PROCEDURES
         IStack<IMap<String,Value>> symTableStack = new model.ADT.Stack.StackExecutionStack<>();
@@ -113,6 +134,7 @@ public class MainWindow extends Application {
                 lockTable,
                 procTable,
                 barrierTable,
+                latchTable,
                 program
         );
 
@@ -155,6 +177,14 @@ public class MainWindow extends Application {
         barrierTableView.getColumns().addAll(bIndexCol, bValueCol, bListCol);
 
 
+        latchTableView = new TableView<>();
+        TableColumn<LatchRow, Integer> lLocCol = new TableColumn<>("Location");
+        lLocCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+
+        TableColumn<LatchRow, Integer> lValCol = new TableColumn<>("Value");
+        lValCol.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+        latchTableView.getColumns().addAll(lLocCol, lValCol);
 
         // ListViews
         outList = new ListView<>();
@@ -174,6 +204,7 @@ public class MainWindow extends Application {
                 new Label("PrgState IDs"), prgStateIdsList,
                 new Label("Heap"), heapTable,
                 new Label("BarrierTable") , barrierTableView,
+                new Label("LatchTable"), latchTableView,
                 new Label("Out"), outList,
                 new Label("FileTable"), fileTableList
         );
@@ -224,9 +255,10 @@ public class MainWindow extends Application {
         }
         heapTable.setItems(heapEntries);
 
+
+        // Update BarrierTable
         var bt = programState.barrierTable();
         ObservableList<BarrierEntryRow> barrierRows = FXCollections.observableArrayList();
-
         for(Map.Entry<Integer,BarrierEntry> e : bt.getContent().entrySet()){
             int idx = e.getKey();
             int required = e.getValue().getRequired();
@@ -234,6 +266,14 @@ public class MainWindow extends Application {
             barrierRows.add(new BarrierEntryRow(idx,required,list));
         }
         barrierTableView.setItems(barrierRows);
+
+        // Update LatchTable
+        var lt = programState.latchTable();
+        ObservableList<LatchRow> latchRows = FXCollections.observableArrayList();
+        for (Map.Entry<Integer, Integer> e : lt.getContent().entrySet()) {
+            latchRows.add(new LatchRow(e.getKey(), e.getValue()));
+        }
+        latchTableView.setItems(latchRows);
 
         // Update Out
         IList<Value> out = programState.out();

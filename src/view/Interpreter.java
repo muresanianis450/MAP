@@ -4,6 +4,8 @@ import controller.Controller;
 import exceptions.MyException;
 import model.ADT.FileTable.FileTable;
 import model.ADT.Heap.Heap;
+import model.ADT.LatchTable.ILatchTable;
+import model.ADT.LatchTable.LatchTable;
 import model.ADT.List.ListOut;
 import model.ADT.LockTable.LockTable;
 import model.ADT.Map.IMap;
@@ -91,9 +93,10 @@ public class Interpreter {
                 System.out.println("ProcTable init error: " + e.getMessage());}
 
 
-            // ✅ NEW: BarrierTable (shared global)
+            // arrierTable (shared global)
             IBarrierTable barrierTable = new BarrierTable();
 
+            ILatchTable latchTable = new LatchTable();
             // If you have a “procedure example program”, you can register procedures here.
             // Otherwise, procTable stays empty for old examples and they still work.
 
@@ -112,6 +115,7 @@ public class Interpreter {
                     new LockTable(),
                     procTable,
                     barrierTable,
+                    latchTable,
                     program
             );
 
@@ -136,7 +140,10 @@ public class Interpreter {
                             System.out.println("Out=" + programState.out());
                             System.out.println("FileTable=" + programState.fileTable().getContent());
                             System.out.println("Heap=" + programState.heap().getContent());
-                            System.out.println("ProcTable=" + programState.procTable()); // NEW
+                            System.out.println("ProcTable=" + programState.procTable());
+                            System.out.println("BarrierTable=" + programState.barrierTable().getContent());
+                            System.out.println("LatchTable=" + programState.latchTable().getContent());
+
                             System.out.println();
                         }
                     }

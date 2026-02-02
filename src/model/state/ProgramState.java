@@ -13,6 +13,8 @@ import model.value.IntegerValue;
 import model.value.Value;
 import model.ADT.LockTable.ILockTable;
 import model.ADT.BarrierTable.IBarrierTable;
+
+import model.ADT.LatchTable.ILatchTable;
 public class ProgramState {
 
     private static int lastId = 0;
@@ -30,6 +32,7 @@ public class ProgramState {
     private final IStack<IMap<String,Value>> symTableStack;
     private final IProcTable procTable;
     private final IBarrierTable barrierTable;
+    private final ILatchTable latchTable;
     public ProgramState(IStack<Statement> executionStack,
                         IStack<IMap<String, Value>>symbolTableStack,
                         IList<Value> out,
@@ -38,6 +41,7 @@ public class ProgramState {
                         ILockTable lockTable,
                         IProcTable procTable,
                         IBarrierTable barrierTable,
+                        ILatchTable latchTable,
                         Statement originalProgram
                         ) {
 
@@ -51,6 +55,7 @@ public class ProgramState {
         this.symTableStack = symbolTableStack;
         this.procTable = procTable;
         this.barrierTable =  barrierTable;
+        this.latchTable = latchTable;
     }
 
     public static synchronized int newId() {
@@ -86,6 +91,7 @@ public class ProgramState {
     public boolean isNotCompleted() {
         return !executionStack.isEmpty();
     }
+
     public ProgramState oneStep() throws MyException {
         if (executionStack.isEmpty()) {
             throw new MyException("Execution stack is empty!");
@@ -95,6 +101,9 @@ public class ProgramState {
     }
 
 
+    public ILatchTable latchTable() {
+        return latchTable;
+    }
     @Override
     public String toString() {
         return "------------------------------------------------------------\n" +
@@ -108,6 +117,7 @@ public class ProgramState {
                 "\nProcTable:\n" + procTable +
                 "\nBarrierTable:\n" + barrierTable +
                 "\nLockTable:\n" + lockTable +
+                "\nLatchTable:\n" + latchTable +
                 "\n------------------------------------------------------------\n";
     }
 

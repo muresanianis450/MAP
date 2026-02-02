@@ -77,6 +77,12 @@ public class Repository implements IRepository {
                 logFile.println(entry.getKey() + " -> "  + entry.getValue());
             }
 
+            logFile.println("LatchTable:");
+            Map<Integer, Integer> latchContent = state.latchTable().getContent();
+            for(Map.Entry<Integer, Integer> entry : latchContent.entrySet()) {
+                logFile.println(entry.getKey() + " -> " + entry.getValue());
+            }
+
             logFile.println("------------------------------------------------------------\n");
 
         } catch (IOException e) {
