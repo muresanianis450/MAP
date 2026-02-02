@@ -29,7 +29,7 @@ public class GUIController {
     public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException, MyException {
 
 
- //ROUND-ROBIN IMPLEMENTATION ( one step for ONE program per click ( for semaphores and GUI)) 
+ //ROUND-ROBIN IMPLEMENTATION ( one step for ONE program per click ( for semaphores and GUI))
         // keep only runnable
         List<ProgramState> runnable = removeCompletedPrg(prgList);
         if (runnable.isEmpty()) {

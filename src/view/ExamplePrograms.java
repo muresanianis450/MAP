@@ -1092,7 +1092,7 @@ public class ExamplePrograms {
 
         //Semaphore example
         examples.add(new ProgramExample(
-                "Ref int v1; int cnt; " +
+                "SEMAPHORE: Ref int v1; int cnt; " +
                         "new(v1,1); createSemaphore(cnt,rH(v1)); " +
                         "fork(acquire(cnt); wh(v1,rH(v1)*10); print(rH(v1)); release(cnt)); " +
                         "fork(acquire(cnt); wh(v1,rH(v1)*10); wh(v1,rH(v1)*2); print(rH(v1)); release(cnt)); " +
@@ -1178,6 +1178,55 @@ public class ExamplePrograms {
                                                                         )
                                                                 )
                                                         )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        examples.add(new ProgramExample(
+                "MUL: v1=2; v2=3; if (v1!=0) then print(MUL(v1,v2)) else print(v1)",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v1", new IntegerType()),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("v2", new IntegerType()),
+                                new CompoundStatement(
+                                        new AssignmentStatement("v1", new ConstantExpression(new IntegerValue(2))),
+                                        new CompoundStatement(
+                                                new AssignmentStatement("v2", new ConstantExpression(new IntegerValue(3))),
+                                                new IfStatement(
+                                                        new RelationalExpression(
+                                                                new VariableExpression("v1"),
+                                                                new ConstantExpression(new IntegerValue(0)),
+                                                                "!="
+                                                        ),
+                                                        new PrintStatement(
+                                                                new MulExpression(
+                                                                        new VariableExpression("v1"),
+                                                                        new VariableExpression("v2")
+                                                                )
+                                                        ),
+                                                        new PrintStatement(new VariableExpression("v1"))
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+
+        examples.add(new ProgramExample(
+                "wait: int v; v=20; wait(10); print(v*10)",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v", new IntegerType()),
+                        new CompoundStatement(
+                                new AssignmentStatement("v", new ConstantExpression(new IntegerValue(20))),
+                                new CompoundStatement(
+                                        new WaitStatement(10),
+                                        new PrintStatement(
+                                                new ArithmeticExpression(
+                                                        "*",
+                                                        new VariableExpression("v"),
+                                                        new ConstantExpression(new IntegerValue(10))
                                                 )
                                         )
                                 )
