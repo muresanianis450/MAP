@@ -210,3 +210,169 @@ switch(exp)
 (case exp2: stmt2)
 (default: stmt3)
 ```
+
+## Changes added on 05.02.2026
+
+This update significantly extends the language with **advanced control flow**, **procedures**, and multiple **synchronization mechanisms** for concurrent execution.
+
+---
+
+# 1. Advanced Control Flow Constructs ⛓️
+
+### Conditional Assignment 
+
+Added support for:
+
+```java
+v = exp1 ? exp2 : exp3
+```
+#### How it works?🔍
+```java
+if (exp1)
+    v = exp2;
+else
+    v = exp3;
+```
+Type Safety
+- exp1 must be **bool**
+- exp2, exp3 and v must have the **same type**
+- Variable must already be declared
+
+### Repeat-Until Statement
+```java
+repeat(stmt) until(condition)
+```
+#### How it works?🔍
+Desugars into:
+```java
+stmt;
+while(!condition){
+    stmt;}
+```
+Type Safety:
+- The condition must be **bool**
+- Ensures the body runs at least once
+
+### For Statement
+```java
+for ( v = exp1 ; v < exp2; v = exp3) stmt
+```
+#### How it works?🔍
+Desugars into:
+```java
+int v;
+v = exp1;
+while( v < exp2){
+    stmt;
+    v = exp3;
+        }
+```
+Type Safety:
+- exp1, exp2, exp3 must be **int**
+- v is locally declared **inside the for**
+- Variable must not already exist in the current scope
+
+
+### While Statement
+```java
+while(condition) stmt
+```
+Type Safety:
+- Condition must be **bool**
+
+
+# 2. Time-Control & Execution Delay ⌛🕛
+
+### Sleep Statement
+```java
+sleep(n)
+```
+#### How it works?🔍
+- If **n > 0** -> pushes **sleep(n-1)** to ExecutionStack
+- If **n == 0** -> does nothing
+
+### Wait Statement
+```java
+wait(n)
+```
+#### How it works?🔍
+Desugars into:
+```java
+print(n);
+wait(n-1);
+```
+
+# 3. Synchronization Mechanisms( Concurrency Support) ⛓️‍💥⛓️‍💥
+The interpreter now includes multiple synchronization primitives implemented using atomic operations( Java **synchronized** blocks and **ReentrantLock**).
+
+## 🔒 Lock Mechanism
+```java
+lock(var)
+```
+#### How it works?🔍
+- **var** must store an integer index
+- If lock is **free** (-1) -> current program acquires it
+- If locked -> statement is pushed back on stack (retry later)
+
+## ⛓️ Latch Mechanism
+
+### CountDown Statement
+```java
+countDown(var)
+```
+- **var** must contain latch index
+- If latch value > 0 -> **decremented atomically**
+- Always **writes current ProgramStateID** into Out
+
+### AwaitLatch Statement
+```java
+awaitLatch(var)
+```
+- If latch value == 0 -> **continues execution**
+- Else -> **pushes itself back (waits)**
+
+## 🚦 Semaphore Mechanism
+### Acquire Statement
+```java
+acquire(var)
+```
+- **var** must contain **semaphore index**
+- If available permits exist:
+  - Adds current **ProgramState ID* to acquired list
+- If no permits:
+  - Pushes itself back on execution stack
+
+### Release Statement
+```java
+release(var)
+```
+- **Removes** current ProgramState ID from **semaphore holder list**
+- If not holding the semaphore -> does nothing
+
+## 🚧 Barrier Mechanism
+### New Barrier Statement
+```java
+newBarrier(var,exp)
+```
+- **exp** must evaluate to integer N
+- Allocates barrier with:
+  - Required threads = N
+  - Waiting list = empty
+- Stores generated barrier index into var
+
+### Barrier Table Structure
+Each entry:
+```java
+(index) -> (required, waitingList)
+```
+- **required** = number of threads needed
+- **waitingList** = ProgramState IDs currently waiting
+
+# 4. Procedure Support 🫂
+### ProcTable:
+- Maps procedure name -> (parameter list, body)
+- Prevents duplicate procedure definitions
+- Lookup throws exception if undefined
+```java
+procedureName -> (List<String> params, Statement body)
+```
