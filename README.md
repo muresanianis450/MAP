@@ -1,9 +1,41 @@
-# 🧠 Toy Language Interpreter (Java)
+# 🧠 Custom Language Interpreter (Java)
 
-A small **Toy Language Interpreter** built in **Java**, designed to simulate the inner workings of a simple programming language.  
-It executes statements step-by-step while showing the evolution of the **Execution Stack**, **Symbol Table**, and **Output List** — giving a clear view of how programs run internally.
+A fully-featured **Custom Language Interpreter** built in **Java using the JavaFX framework**, designed to simulate the internal execution model of a small concurrent programming language.  
 
----
+The project follows a layered architecture (Model–View–Controller) and executes programs **step-by-step**, visually displaying the evolution of the entire **Program State**. Each execution is logged to text files for debugging and traceability.
+
+The interpreter supports:
+
+- 🧮 Primitive and reference types (`int`, `bool`, `string`, `Ref(type)`)
+- 🗃️ Heap memory with safe Garbage Collection
+- 📂 File handling (open/read/close)
+- 🔁 Advanced control flow (`if`, `switch`, `while`, `repeat-until`, `for`, ternary operator)
+- ⏳ Execution control (`sleep`, `wait`)
+- 🔐 Concurrency primitives (locks, latches, semaphores, barriers)
+- 🧩 Procedure definitions via a Procedure Table
+- 🧵 Multi-threaded execution with `fork`
+
+Each running program maintains and updates the following internal structures:
+
+- **Execution Stack**
+- **Symbol Table**
+- **Output List**
+- **Heap Table**
+- **File Table**
+- **Lock Table**
+- **Latch Table**
+- **Semaphore Table**
+- **Barrier Table**
+- **Procedure Table**
+
+All shared tables are implemented using atomic operations (`synchronized`, `ReentrantLock`) to ensure correct concurrent behavior.
+
+The interpreter provides both:
+- 🖥️ A **JavaFX GUI** for step-by-step visualization
+- 📄 Persistent **log files** that record every ProgramState transition
+
+This project simulates how real-world language runtimes manage memory, synchronization, and execution flow internally.
+
 
 ## Changes added on 26.10.2025🔨
 
