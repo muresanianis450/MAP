@@ -28,7 +28,7 @@ public class GUIController {
 
     public void oneStepForAllPrg(List<ProgramState> prgList) throws InterruptedException, MyException {
 
-
+/*
  //ROUND-ROBIN IMPLEMENTATION ( one step for ONE program per click ( for semaphores and GUI))
         // keep only runnable
         List<ProgramState> runnable = removeCompletedPrg(prgList);
@@ -59,9 +59,9 @@ public class GUIController {
         rrIndex++;
         if (rrIndex >= runnable.size()) rrIndex = 0;
 
-        repo.setProgramList(runnable);
+        repo.setProgramList(runnable)*/
 
-     /*   // keep only runnable programs for stepping
+       // keep only runnable programs for stepping
         List<ProgramState> runnable = removeCompletedPrg(prgList);
 
         if (runnable.isEmpty()) {
@@ -97,7 +97,7 @@ public class GUIController {
         // Optional: log AFTER (but it doubles file size)
         // for (ProgramState prg : prgList) repo.logPrgStateExec(prg);
 
-        repo.setProgramList(prgList); */
+        repo.setProgramList(prgList);
     }
 
 

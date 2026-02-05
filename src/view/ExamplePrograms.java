@@ -299,50 +299,7 @@ public class ExamplePrograms {
                         )
                 )
         ));
-        examples.add(new ProgramExample(
-                "switch(a*10) with cases (b*c) / 10 / default; final Out = {1,2,300}",
-                new CompoundStatement(
-                        new VariableDeclarationStatement("a", new IntegerType()),
-                        new CompoundStatement(
-                                new VariableDeclarationStatement("b", new IntegerType()),
-                                new CompoundStatement(
-                                        new VariableDeclarationStatement("c", new IntegerType()),
-                                        new CompoundStatement(
-                                                new AssignmentStatement("a", new ConstantExpression(new IntegerValue(1))),
-                                                new CompoundStatement(
-                                                        new AssignmentStatement("b", new ConstantExpression(new IntegerValue(2))),
-                                                        new CompoundStatement(
-                                                                new AssignmentStatement("c", new ConstantExpression(new IntegerValue(5))),
-                                                                new CompoundStatement(
-                                                                        new SwitchStatement(
-                                                                                new ArithmeticExpression("*",
-                                                                                        new VariableExpression("a"),
-                                                                                        new ConstantExpression(new IntegerValue(10))
-                                                                                ),
-                                                                                new ArithmeticExpression("*",
-                                                                                        new VariableExpression("b"),
-                                                                                        new VariableExpression("c")
-                                                                                ),
-                                                                                new CompoundStatement(
-                                                                                        new PrintStatement(new VariableExpression("a")),
-                                                                                        new PrintStatement(new VariableExpression("b"))
-                                                                                ),
-                                                                                new ConstantExpression(new IntegerValue(10)),
-                                                                                new CompoundStatement(
-                                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(100))),
-                                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(200)))
-                                                                                ),
-                                                                                new PrintStatement(new ConstantExpression(new IntegerValue(300)))
-                                                                        ),
-                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(300)))
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                )
-        ));
+
         examples.add(new ProgramExample(
                 "ref int a; new(a,20); (for(v=0;v<3;v=v+1) fork(print(v); v=v*rh(a))); print(rh(a)) ; final Out = {0,1,2,20}",
                 new CompoundStatement(
@@ -1090,7 +1047,103 @@ public class ExamplePrograms {
                 exLatch));
 
 
-        //Semaphore example
+
+        examples.add(new ProgramExample(
+                "MUL: v1=2; v2=3; if (v1!=0) then print(MUL(v1,v2)) else print(v1)",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v1", new IntegerType()),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("v2", new IntegerType()),
+                                new CompoundStatement(
+                                        new AssignmentStatement("v1", new ConstantExpression(new IntegerValue(2))),
+                                        new CompoundStatement(
+                                                new AssignmentStatement("v2", new ConstantExpression(new IntegerValue(3))),
+                                                new IfStatement(
+                                                        new RelationalExpression(
+                                                                new VariableExpression("v1"),
+                                                                new ConstantExpression(new IntegerValue(0)),
+                                                                "!="
+                                                        ),
+                                                        new PrintStatement(
+                                                                new MulExpression(
+                                                                        new VariableExpression("v1"),
+                                                                        new VariableExpression("v2")
+                                                                )
+                                                        ),
+                                                        new PrintStatement(new VariableExpression("v1"))
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+
+        examples.add(new ProgramExample(
+                "wait: int v; v=20; wait(10); print(v*10)",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("v", new IntegerType()),
+                        new CompoundStatement(
+                                new AssignmentStatement("v", new ConstantExpression(new IntegerValue(20))),
+                                new CompoundStatement(
+                                        new WaitStatement(10),
+                                        new PrintStatement(
+                                                new ArithmeticExpression(
+                                                        "*",
+                                                        new VariableExpression("v"),
+                                                        new ConstantExpression(new IntegerValue(10))
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+
+
+        examples.add(new ProgramExample(
+                "!!!!SWITCH(a*10) with cases (b*c) / 10 / default; final Out = {1,2,300}",
+                new CompoundStatement(
+                        new VariableDeclarationStatement("a", new IntegerType()),
+                        new CompoundStatement(
+                                new VariableDeclarationStatement("b", new IntegerType()),
+                                new CompoundStatement(
+                                        new VariableDeclarationStatement("c", new IntegerType()),
+                                        new CompoundStatement(
+                                                new AssignmentStatement("a", new ConstantExpression(new IntegerValue(1))),
+                                                new CompoundStatement(
+                                                        new AssignmentStatement("b", new ConstantExpression(new IntegerValue(2))),
+                                                        new CompoundStatement(
+                                                                new AssignmentStatement("c", new ConstantExpression(new IntegerValue(5))),
+                                                                new CompoundStatement(
+                                                                        new SwitchStatement(
+                                                                                new ArithmeticExpression("*",
+                                                                                        new VariableExpression("a"),
+                                                                                        new ConstantExpression(new IntegerValue(10))
+                                                                                ),
+                                                                                new ArithmeticExpression("*",
+                                                                                        new VariableExpression("b"),
+                                                                                        new VariableExpression("c")
+                                                                                ),
+                                                                                new CompoundStatement(
+                                                                                        new PrintStatement(new VariableExpression("a")),
+                                                                                        new PrintStatement(new VariableExpression("b"))
+                                                                                ),
+                                                                                new ConstantExpression(new IntegerValue(10)),
+                                                                                new CompoundStatement(
+                                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(100))),
+                                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(200)))
+                                                                                ),
+                                                                                new PrintStatement(new ConstantExpression(new IntegerValue(300)))
+                                                                        ),
+                                                                        new PrintStatement(new ConstantExpression(new IntegerValue(300)))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        //SEMAPHORE example
         examples.add(new ProgramExample(
                 "SEMAPHORE: Ref int v1; int cnt; " +
                         "new(v1,1); createSemaphore(cnt,rH(v1)); " +
@@ -1178,55 +1231,6 @@ public class ExamplePrograms {
                                                                         )
                                                                 )
                                                         )
-                                                )
-                                        )
-                                )
-                        )
-                )
-        ));
-        examples.add(new ProgramExample(
-                "MUL: v1=2; v2=3; if (v1!=0) then print(MUL(v1,v2)) else print(v1)",
-                new CompoundStatement(
-                        new VariableDeclarationStatement("v1", new IntegerType()),
-                        new CompoundStatement(
-                                new VariableDeclarationStatement("v2", new IntegerType()),
-                                new CompoundStatement(
-                                        new AssignmentStatement("v1", new ConstantExpression(new IntegerValue(2))),
-                                        new CompoundStatement(
-                                                new AssignmentStatement("v2", new ConstantExpression(new IntegerValue(3))),
-                                                new IfStatement(
-                                                        new RelationalExpression(
-                                                                new VariableExpression("v1"),
-                                                                new ConstantExpression(new IntegerValue(0)),
-                                                                "!="
-                                                        ),
-                                                        new PrintStatement(
-                                                                new MulExpression(
-                                                                        new VariableExpression("v1"),
-                                                                        new VariableExpression("v2")
-                                                                )
-                                                        ),
-                                                        new PrintStatement(new VariableExpression("v1"))
-                                                )
-                                        )
-                                )
-                        )
-                )
-        ));
-
-        examples.add(new ProgramExample(
-                "wait: int v; v=20; wait(10); print(v*10)",
-                new CompoundStatement(
-                        new VariableDeclarationStatement("v", new IntegerType()),
-                        new CompoundStatement(
-                                new AssignmentStatement("v", new ConstantExpression(new IntegerValue(20))),
-                                new CompoundStatement(
-                                        new WaitStatement(10),
-                                        new PrintStatement(
-                                                new ArithmeticExpression(
-                                                        "*",
-                                                        new VariableExpression("v"),
-                                                        new ConstantExpression(new IntegerValue(10))
                                                 )
                                         )
                                 )

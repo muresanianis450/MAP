@@ -71,7 +71,7 @@ public class Repository implements IRepository {
                 logFile.println(entry.getKey() + " -> " + entry.getValue());
             }
 
-            logFile.println("BarrierTabel:");
+            logFile.println("BarrierTable:");
             Map<Integer, BarrierEntry> barrierContent = state.barrierTable().getContent();
             for(var entry : barrierContent.entrySet()){
                 logFile.println(entry.getKey() + " -> "  + entry.getValue());

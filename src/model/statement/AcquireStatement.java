@@ -33,24 +33,27 @@ public class AcquireStatement implements Statement {
         if (!v.getType().equals(new IntegerType())) {
             throw new MyException("acquire: variable " + var + " is not int");
         }
+
         int foundIndex = ((IntegerValue) v).getValue();
 
-        // must exist in sem table
+        // check if the semaphore table contains an entry for that index
         if (!semTable.isDefined(foundIndex)) {
             throw new MyException("acquire: index " + foundIndex + " not found in SemaphoreTable");
         }
 
         // atomic critical section for acquire logic
         synchronized (semTable) {
+
             SemaphoreEntry entry = semTable.get(foundIndex);
-            int N1 = entry.getPermits();
-            List<Integer> list1 = entry.getAcquiredBy();
+            int N1 = entry.getPermits(); //entry's permit count
+            List<Integer> list1 = entry.getAcquiredBy(); //current holders list
             int NL = list1.size();
 
             if (N1 > NL) {
                 if (list1.contains(state.id())) {
-                    // do nothing
+                    // if it is already in that list, do nothing
                 } else {
+                    //add it to the list
                     List<Integer> newList = new ArrayList<>(list1);
                     newList.add(state.id());
                     semTable.update(foundIndex, entry.withAcquiredBy(newList));

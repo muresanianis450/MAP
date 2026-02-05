@@ -22,8 +22,12 @@ public class CreateSemaphoreStatement implements Statement {
 
     @Override
     public ProgramState execute(ProgramState state) throws MyException {
+        //acquire the symbol table from the current state
         IMap<String, Value> symTable = state.symbolTable();
+        //acquire the heap table from the current state
         IHeap heap = state.heap();
+
+        //acquire the semaphore table from the current state
         ISemaphoreTable semTable = state.semaphoreTable();
 
         // evaluate exp1
@@ -31,6 +35,7 @@ public class CreateSemaphoreStatement implements Statement {
         if (!(number1Val instanceof IntegerValue)) {
             throw new MyException("createSemaphore: exp1 is not int");
         }
+
         int number1 = ((IntegerValue) number1Val).getValue();
 
         // add new semaphore entry atomically (allocate is synchronized)

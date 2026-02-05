@@ -13,6 +13,7 @@ import model.value.Value;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ReleaseStatement implements Statement {
     private final String var;
 
@@ -25,14 +26,19 @@ public class ReleaseStatement implements Statement {
         IMap<String, Value> symTable = state.symbolTable();
         ISemaphoreTable semTable = state.semaphoreTable();
 
+
         if (!symTable.isDefined(var)) {
             throw new MyException("release: variable " + var + " not defined");
         }
+        //reads var from the symbolTable
         Value v = symTable.lookup(var);
+
         if (!v.getType().equals(new IntegerType())) {
             throw new MyException("release: variable " + var + " is not int");
         }
+        //get the index
         int foundIndex = ((IntegerValue) v).getValue();
+
 
         if (!semTable.isDefined(foundIndex)) {
             throw new MyException("release: index " + foundIndex + " not found in SemaphoreTable");
@@ -42,6 +48,7 @@ public class ReleaseStatement implements Statement {
             SemaphoreEntry entry = semTable.get(foundIndex);
             List<Integer> list1 = entry.getAcquiredBy();
 
+            //if the list contains that id, make a copy of the list, remove it, and then update the original lis
             if (list1.contains(state.id())) {
                 List<Integer> newList = new ArrayList<>(list1);
                 newList.remove((Integer) state.id());

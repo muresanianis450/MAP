@@ -34,8 +34,13 @@ public class SwitchStatement implements Statement{
     public ProgramState execute(ProgramState state) throws MyException{
         //switch(exp) case exp1: stmt1 ; case exp2: stmt2 : stmt2 default : stmtDefault
         //desugars to
-        //if ( exp == exp1) stmt1 else (if (exp == exp2) stmt2 else stmt3)
-
+        /*if ( exp == exp1)
+        *   stmt1
+        * else
+        * (if (exp == exp2)
+        *   stmt2
+        * else stmt3)
+        */
         //basically a switch statement is just a syntactic sugar for nested if statements
         Statement desugared =
                     new IfStatement(
@@ -56,6 +61,7 @@ public class SwitchStatement implements Statement{
         return new SwitchStatement(exp.deepCopy(), exp1.deepCopy(), stmt1.deepCopy(),
                                    exp2.deepCopy(), stmt2.deepCopy(), defaultStmt.deepCopy());
     }
+
     @Override
     public String toString(){
         return "switch(" + exp + ") " +
